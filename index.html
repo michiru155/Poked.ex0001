@@ -356,11 +356,16 @@ svg.icon-svg { display: block; }
 
   // ---------- 設定 ----------
   var TITLE = "はっけん！ポケモン図鑑";
-  var EVENT_NAME = "レジェンドリサーチ in日本橋＆八重洲";
+  var EVENT_NAME = "伝説のポケモンと出会う レジェンドリサーチ in日本橋＆八重洲";
   var EVENT_URL = "https://mitsui-shopping-park.com/urban/legend-research/";
 
   // 更新のお知らせ（新しいものを一番上に追加し、id を1つずつ増やしてください）
   var UPDATES = [
+    { id: 3, date: "2026.09.11", title: "サイトの説明と注意書きを見直しました", items: [
+      "イベント名を、正式名称の「伝説のポケモンと出会う レジェンドリサーチ in日本橋＆八重洲」に統一しました。",
+      "ページ下の「このサイトについて」を見直し、非公式のファン制作ツールであることや、イベントに関わる皆さまとの関係について、よりわかりやすくしました。",
+      "謎解きの問題・答え・手がかりなどの公開・転載を目的としたツールではないことを明記し、SNS投稿時の注意についても追記しました。"
+    ] },
     { id: 2, date: "2026.09.11", title: "写真の編集ができるようになりました", items: [
       "登録画面の「写真を編集」から、トリミング・回転・明るさや色味の調整・フィルターができます。",
       "「全体を入れる」で写真全体を正方形に収めて、残りを余白（白・黒・ぼかし）で埋められます。",
@@ -1121,7 +1126,7 @@ svg.icon-svg { display: block; }
     h += '  </div>';
     h += '</div>';
     h += '<h1 class="title">' + escapeHtml(TITLE).replace("！", "！<wbr>") + '</h1>';
-    h += '<p class="title-sub">「' + escapeHtml(EVENT_NAME) + '」を回るときに使える、ファンが作った非公式の記録ツールです。</p>';
+    h += '<p class="title-sub">「' + escapeHtml(EVENT_NAME) + '」を巡るときに使える、ファンが個人で作った非公式の記録ツールです。</p>';
     h += '<div class="progress-row">';
     h += '  <div class="progress-badge"><span class="progress-num">' + species + '</span><span class="progress-slash">/</span><span class="progress-den">' + kinds + '</span></div>';
     h += '  <div class="progress-bar-track"><div class="progress-bar-fill" style="width:' + (kinds ? species / kinds * 100 : 0) + '%"></div></div>';
@@ -1136,7 +1141,7 @@ svg.icon-svg { display: block; }
     }
 
     if (!noticeClosed) {
-      h += '<div class="notice" role="note"><b>このサイトはファンが個人で作った非公式ツールです。</b>公式とは関係ありません。ご理解のうえで、イベントを楽しんでください！（くわしくはページの一番下）';
+      h += '<div class="notice" role="note"><b>このサイトは、ファンが個人で作った非公式ツールです。</b><br>イベントの主催・協力・協賛各社や、RIDDLERをはじめとする制作者・関係者とは関係ありません。<br>公式情報や参加ルールをご確認のうえ、イベントとあわせてお楽しみください✨️';
       h += '<button class="notice-close" id="btn-notice" aria-label="閉じる">' + ICON_X + '</button></div>';
     }
 
@@ -1186,13 +1191,17 @@ svg.icon-svg { display: block; }
 
     h += '<footer class="site-footer">';
     h += '<h2>このサイトについて</h2>';
-    h += '<p>「' + escapeHtml(TITLE) + '」は、ファンが個人で作った<b>非公式のツール</b>です。イベントの主催者（三井不動産・株式会社ポケモン・JR東海）や任天堂など、公式の団体とは一切関係ありません。このサイトについて公式へのお問い合わせはしないでください。</p>';
-    h += '<p>候補の名前などに誤りがあったり、予告なく内容の変更や公開の終了をしたりすることがあります。登録した写真や名前は、お使いの端末のブラウザの中だけに保存されます（ほかの人には見えません）。ブラウザのデータを消すと、登録内容も消えます。</p>';
-    h += '<p>これらの点をご理解いただいたうえで、ご利用ください。</p>';
-    h += '<p>イベントの開催期間・場所などの詳しい情報は、<a href="' + EVENT_URL + '" target="_blank" rel="noopener">公式サイト</a>をご確認ください。</p>';
-    h += '<p>バグや不具合を見つけたときは、X（旧Twitter）の <a href="https://x.com/michiru_poke" target="_blank" rel="noopener">@michiru_poke</a> までお知らせください。</p>';
+    h += '<p>「' + escapeHtml(TITLE) + '」は、「' + escapeHtml(EVENT_NAME) + '」を巡りながら、見つけたポケモンを写真とともに記録して楽しむための、ファンが個人で作った<b>非公式ツール</b>です。</p>';
+    h += '<p>本イベントは、三井不動産株式会社をはじめ、株式会社ポケモン、JR東海など多くの関係者によって企画・運営されています。また、謎解きは松丸亮吾さん率いる「RIDDLER」が制作しています。</p>';
+    h += '<p>このサイトは、これらの企業・団体・制作者・関係者から提供・承認・監修されたものではありません。</p>';
+    h += '<p>掲載しているポケモンの候補名などには、誤りがあるかもしれません。また、予告なく内容を変更したり、公開を終了したりすることがあります。</p>';
+    h += '<p>登録した写真や入力内容は、お使いの端末のブラウザ内に保存されます。ブラウザのデータを削除すると、登録内容も消える場合があります。</p>';
+    h += '<p>イベントの開催期間・場所・参加方法など、詳しい情報は<a href="' + EVENT_URL + '" target="_blank" rel="noopener">公式サイト</a>をご確認ください。</p>';
+    h += '<p>また、このサイトはポケモンを見つけた記録を楽しむためのものです。謎解きの問題・答え・手がかりなどの公開や転載を目的としたものではありません。</p>';
+    h += '<p>SNSなどへ投稿するときも、公式の案内やルールを守ってお楽しみください。</p>';
+    h += '<p>バグや不具合、このサイトについてのご連絡は、イベント公式ではなく、X（旧Twitter）の <a href="https://x.com/michiru_poke" target="_blank" rel="noopener">@michiru_poke</a> までお願いします。</p>';
     h += '<p><button class="text-btn" id="btn-updates">更新履歴を見る</button></p>';
-    h += '<p class="enjoy">イベントのおともに、気軽に楽しんでもらえたらうれしいです！</p>';
+    h += '<p class="enjoy">素敵なイベントを作ってくださった皆さまへの敬意を大切にしつつ、<br>イベントのおともに、気軽に楽しんでもらえたらうれしいです！</p>';
     h += '</footer>';
 
     app.innerHTML = h;
