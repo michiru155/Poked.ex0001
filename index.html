@@ -67,7 +67,7 @@ button { font-family: inherit; touch-action: manipulation; -webkit-tap-highlight
 
 .title {
   font-family: 'Mochiy Pop One', sans-serif; font-weight: 400;
-  font-size: 30px; margin: 10px 0 14px; color: #FFFFFF;
+  font-size: clamp(22px, 7vw, 30px); margin: 10px 0 14px; color: #FFFFFF; word-break: keep-all; overflow-wrap: anywhere;
   text-shadow: 2px 2px 0 var(--red-dark), 0 3px 0 rgba(35,36,74,0.25);
 }
 
@@ -268,6 +268,21 @@ button { font-family: inherit; touch-action: manipulation; -webkit-tap-highlight
 }
 .notice b { color: var(--navy); }
 .notice-close { position: absolute; top: 6px; right: 6px; background: none; border: none; color: var(--sub); cursor: pointer; padding: 6px; display: flex; }
+.update-banner {
+  max-width: 640px; margin: 0 auto 12px; background: var(--navy); color: #fff; border-radius: 14px;
+  padding: 10px 8px 10px 12px; display: flex; align-items: center; gap: 10px;
+}
+.update-new { background: var(--yellow); color: var(--navy); font-family: 'Space Mono', monospace; font-weight: 700; font-size: 11px; border-radius: 6px; padding: 2px 6px; flex-shrink: 0; }
+.update-text { flex: 1; min-width: 0; display: flex; flex-direction: column; line-height: 1.45; }
+.update-text small { font-size: 11px; color: #C9CAE8; }
+.update-text b { font-size: 13px; }
+.update-more { background: #fff; color: var(--navy); border: none; border-radius: 999px; padding: 6px 12px; font-size: 12px; font-weight: 700; cursor: pointer; flex-shrink: 0; }
+.update-banner .notice-close { position: static; color: #C9CAE8; }
+.updates-list { overflow-y: auto; -webkit-overflow-scrolling: touch; margin-bottom: 14px; }
+.update-item { background: #fff; border: 1px solid var(--line); border-radius: 12px; padding: 10px 14px; margin-bottom: 10px; }
+.update-date { margin: 0; font-family: 'Space Mono', monospace; font-size: 11px; color: var(--sub); }
+.update-title { margin: 2px 0 4px; font-weight: 700; font-size: 14px; color: var(--navy); }
+.update-item ul { margin: 0; padding-left: 1.2em; font-size: 12.5px; line-height: 1.7; color: var(--ink); }
 .site-footer {
   max-width: 640px; margin: 32px auto 0; padding: 16px 16px 4px; border-top: 2px dashed rgba(35,36,74,0.2);
   font-size: 12px; line-height: 1.8; color: var(--ink);
@@ -276,6 +291,56 @@ button { font-family: inherit; touch-action: manipulation; -webkit-tap-highlight
 .site-footer p { margin: 0 0 8px; }
 .site-footer .enjoy { color: var(--red); font-weight: 700; }
 .site-footer a { color: var(--red); font-weight: 700; text-underline-offset: 3px; }
+/* ---------- photo editor ---------- */
+.edit-photo-btn {
+  width: 100%; display: flex; align-items: center; gap: 8px; margin: -6px 0 14px;
+  background: var(--navy); color: #fff; border: none; border-radius: 12px; padding: 10px 12px;
+  font-size: 13px; font-weight: 700; cursor: pointer; text-align: left;
+}
+.edit-photo-btn small { font-weight: 400; font-size: 11px; opacity: .75; margin-left: auto; }
+.editor {
+  position: fixed; inset: 0; z-index: 40; background: #1B1C33; color: #fff;
+  display: flex; flex-direction: column; overflow-y: auto; -webkit-overflow-scrolling: touch;
+}
+.ed-head { display: flex; align-items: center; justify-content: space-between; padding: 12px 12px 8px; gap: 8px; }
+.ed-title { margin: 0; font-family: 'Mochiy Pop One', sans-serif; font-size: 15px; }
+.ed-textbtn { background: none; border: none; color: #C9CAE8; font-size: 14px; padding: 8px; cursor: pointer; }
+.ed-done { background: var(--yellow); color: var(--navy); border: none; border-radius: 999px; padding: 8px 18px; font-weight: 700; font-size: 14px; cursor: pointer; }
+.ed-stage { display: flex; justify-content: center; padding: 4px 16px 0; }
+.ed-frame { position: relative; line-height: 0; box-shadow: 0 0 0 2px rgba(255,255,255,0.85); }
+.ed-frame canvas { display: block; touch-action: none; cursor: grab; }
+.ed-grid {
+  position: absolute; inset: 0; pointer-events: none;
+  background:
+    linear-gradient(to right, transparent calc(33.333% - 0.5px), rgba(255,255,255,.35) calc(33.333% - 0.5px), rgba(255,255,255,.35) calc(33.333% + 0.5px), transparent calc(33.333% + 0.5px), transparent calc(66.666% - 0.5px), rgba(255,255,255,.35) calc(66.666% - 0.5px), rgba(255,255,255,.35) calc(66.666% + 0.5px), transparent calc(66.666% + 0.5px)),
+    linear-gradient(to bottom, transparent calc(33.333% - 0.5px), rgba(255,255,255,.35) calc(33.333% - 0.5px), rgba(255,255,255,.35) calc(33.333% + 0.5px), transparent calc(33.333% + 0.5px), transparent calc(66.666% - 0.5px), rgba(255,255,255,.35) calc(66.666% - 0.5px), rgba(255,255,255,.35) calc(66.666% + 0.5px), transparent calc(66.666% + 0.5px));
+}
+.ed-tip { text-align: center; font-size: 11.5px; color: #9FA1C8; margin: 8px 0 10px; }
+.ed-panel {
+  margin-top: auto; background: var(--cream); color: var(--navy); border-radius: 18px 18px 0 0;
+  padding: 12px 16px calc(14px + env(safe-area-inset-bottom, 0px)); max-width: 520px; width: 100%; align-self: center;
+}
+.ed-tabs { display: flex; gap: 4px; background: #fff; border: 2px solid var(--navy); border-radius: 12px; padding: 3px; margin-bottom: 12px; }
+.ed-tab { flex: 1; border: none; background: none; border-radius: 9px; padding: 7px 4px; font-size: 12.5px; font-weight: 700; color: var(--ink); cursor: pointer; }
+.ed-tab.active { background: var(--red); color: #fff; }
+.ed-controls { min-height: 118px; }
+.ed-row { display: flex; align-items: center; gap: 10px; font-size: 12.5px; font-weight: 700; margin-bottom: 10px; }
+.ed-row span { width: 6.2em; flex-shrink: 0; white-space: nowrap; }
+.ed-row input[type=range] { flex: 1; min-width: 0; accent-color: var(--red); height: 28px; }
+.ed-row b { width: 2.6em; text-align: right; font-family: 'Space Mono', monospace; font-size: 12px; color: var(--sub); }
+.ed-row2 { display: flex; align-items: center; gap: 10px; font-size: 12.5px; font-weight: 700; margin-top: 10px; flex-wrap: wrap; }
+.ed-btns { display: flex; gap: 6px; flex-wrap: wrap; }
+.ed-chip {
+  display: inline-flex; align-items: center; gap: 4px; background: #fff; border: 1px solid var(--line);
+  border-radius: 999px; padding: 7px 12px; font-size: 12.5px; color: var(--navy); cursor: pointer;
+}
+.ed-chip.on { background: var(--navy); border-color: var(--navy); color: #fff; font-weight: 700; }
+.ed-filters { display: flex; gap: 8px; overflow-x: auto; padding-bottom: 6px; -webkit-overflow-scrolling: touch; }
+.ed-filter { flex-shrink: 0; background: none; border: none; padding: 0; cursor: pointer; display: flex; flex-direction: column; align-items: center; gap: 4px; font-size: 11.5px; color: var(--ink); }
+.ed-filter canvas { width: 64px; height: 64px; border-radius: 10px; border: 3px solid transparent; display: block; }
+.ed-filter.on canvas { border-color: var(--red); }
+.ed-filter.on span { color: var(--red); font-weight: 700; }
+.ed-reset { display: block; margin: 6px auto 0; background: none; border: none; color: var(--sub); font-size: 12px; text-decoration: underline; cursor: pointer; padding: 6px; }
 .icon { display: inline-flex; }
 svg.icon-svg { display: block; }
 </style>
@@ -283,6 +348,7 @@ svg.icon-svg { display: block; }
 <body>
 <div id="app"></div>
 <div id="modal-root"></div>
+<div id="editor-root"></div>
 
 <script>
 (function () {
@@ -292,6 +358,18 @@ svg.icon-svg { display: block; }
   var TITLE = "はっけん！ポケモン図鑑";
   var EVENT_NAME = "レジェンドリサーチ in日本橋＆八重洲";
   var EVENT_URL = "https://mitsui-shopping-park.com/urban/legend-research/";
+
+  // 更新のお知らせ（新しいものを一番上に追加し、id を1つずつ増やしてください）
+  var UPDATES = [
+    { id: 2, date: "2026.09.11", title: "写真の編集ができるようになりました", items: [
+      "登録画面の「写真を編集」から、トリミング・回転・明るさや色味の調整・フィルターができます。",
+      "「全体を入れる」で写真全体を正方形に収めて、残りを余白（白・黒・ぼかし）で埋められます。",
+      "編集の設定は保存されるので、あとから何度でも編集し直せます。"
+    ] },
+    { id: 1, date: "2026.09.11", title: "公開しました", items: [
+      "「はっけん！ポケモン図鑑」を公開しました。イベントのおともに使ってもらえたらうれしいです。"
+    ] }
+  ];
 
   // 名前の候補（「候補を編集」からも変更できます）
   var DEFAULT_CANDIDATES = ["レジギガス", "レジアイス", "レジロック", "レジスチル", "アンノーン", "ウツロイド", "コスモッグ", "コスモウム", "カミツルギ", "ネクロズマ", "マッシブーン", "ギルガルド（シールドフォルム）", "メルタン", "メタグロス", "デカヌチャン", "パルシェン", "フリーザー", "フリーザー（ガラルのすがた）", "サンダー", "サンダー（ガラルのすがた）", "ファイヤー", "ファイヤー（ガラルのすがた）", "ミュウツー", "ギアル", "ギギアル", "ギギギアル", "オニドリル", "フシギダネ", "ゼニガメ", "ヒトカゲ", "ポッポ", "コラッタ", "ビッパ", "ヤドン", "シェルダー", "ヤドラン", "ニャース", "ニャース（ガラルのすがた）", "ペルシアン", "ニャイキング", "カラナクシ（にしのうみ）", "カラナクシ（ひがしのうみ）", "トリトドン（にしのうみ）", "トリトドン（ひがしのうみ）", "ビリリダマ", "ビリリダマ（ヒスイのすがた）", "マルマイン", "マルマイン（ヒスイのすがた）", "ミュウ", "ガバイト", "メレシー", "ヤミラミ", "チルット", "チルタリス", "ジャラランガ", "ブリジュラス", "タツベイ", "ボーマンダ", "バンギラス", "ドラメシヤ", "ドロンチ", "ドラパルト", "フカマル", "ガブリアス", "キングドラ", "カイリュー", "ヌメルゴン", "セグレイブ", "サザンドラ", "ディグダ", "ダグトリオ", "ウミディグダ", "ウミトリオ", "メノクラゲ", "ドククラゲ", "ノノクラゲ", "リククラゲ", "カビゴン", "カジッチュ", "タルップル", "アマカジ", "ヤバチャ（しんさくフォルム）", "ヤバチャ（がんさくフォルム）", "ポットデス（がんさくフォルム）", "マホイップ", "バニプッチ", "バニリッチ", "バイバニラ", "チャデス（マガイモノのすがた）", "パピモッチ", "バウッツェル", "ホシガリス", "ゴンベ", "ファイアロー", "キャモメ", "ツツケラ", "ピジョン", "タマタマ", "ナゾノクサ", "タマゲタケ", "モロバレル", "スボミー", "カクレオン", "ウソッキー", "デスマス", "デスマス（ガラルのすがた）", "デスカーン", "デスバーン", "イシヘンジン", "ゴルーグ", "オドリドリ（めらめらスタイル）", "オドリドリ（ぱちぱちスタイル）", "オドリドリ（まいまいスタイル）", "オドリドリ（ふらふらスタイル）", "イーユイ", "パオジアン", "チオンジェン", "ディンルー", "シャリタツ（そったすがた）", "シャリタツ（たれたすがた）", "シャリタツ（のびたすがた）", "ヘイラッシャ", "トルネロス（けしんフォルム）", "ボルトロス（けしんフォルム）", "ランドロス（けしんフォルム）", "ラブトロス（けしんフォルム）", "パチリス", "デンチュラ", "ロトム（ロトムのすがた）", "ミミッキュ（ばけたすがた）", "ピチュー", "ライチュウ", "コイル", "カプ・コケコ", "メリープ", "ゼラオラ", "ラクライ", "ライボルト", "モルペコ（まんぷくもよう）", "モルペコ（はらぺこもよう）", "デデンネ", "ゼブライカ", "レアコイル", "エリキテル", "プラスル", "マイナン", "トゲデマル", "エレキッド", "サンダース", "エモンガ", "パモ", "パモット", "パーモット", "ズピカ", "ハラバリー", "ワンパチ", "バチュル", "エンテイ", "ライコウ", "スイクン", "テッポウオ", "マンタイン", "ヨワシ（たんどくのすがた）", "ナミイルカ", "コダック", "ジュゴン", "ペリッパー", "ラプラス", "カイデン", "セレビィ", "パラセクト", "マシェード", "カイロス", "デンヂムシ", "クワガノン", "ヘラクロス", "アブリー", "ヒメンカ", "カリキリ", "ヤバソチャ（けっさくのすがた）", "カミッチュ", "デオキシス", "レックウザ", "メテノ", "ルナトーン", "ピカチュウ"];
@@ -378,7 +456,7 @@ svg.icon-svg { display: block; }
 
   // ---------- 画像 ----------
   function resizeImage(file, maxSize, quality) {
-    maxSize = maxSize || 720; quality = quality || 0.75;
+    maxSize = maxSize || 1200; quality = quality || 0.8;
     return new Promise(function (resolve, reject) {
       var reader = new FileReader();
       reader.onerror = function () { reject(new Error("read failed")); };
@@ -489,6 +567,8 @@ svg.icon-svg { display: block; }
   var ICON_IMAGE = svgIcon('<rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="9" cy="9" r="2"/><path d="M21 15l-5-5L5 21"/>', 22);
   var ICON_X = svgIcon('<line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>', 18);
   var ICON_SEARCH = svgIcon('<circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>', 16);
+  var ICON_EDIT = svgIcon('<path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"/>', 16);
+  var ICON_ROTATE = svgIcon('<path d="M21 12a9 9 0 1 1-3-6.7L21 8"/><polyline points="21 3 21 8 16 8"/>', 16);
   var ICON_SPARKLES = svgIcon('<path d="M12 3l1.9 5.1L19 10l-5.1 1.9L12 17l-1.9-5.1L5 10l5.1-1.9Z"/>', 30);
 
   function stampSvg() {
@@ -519,6 +599,12 @@ svg.icon-svg { display: block; }
     set: function (v) { state.cats[state.tab].candidates = v; }
   });
   function curCat() { return catDef(state.tab); }
+  var updatesSeen = null; // 最後に見たお知らせの id
+  try { var us = localStorage.getItem("hakken-zukan-updates"); if (us !== null) updatesSeen = +us; } catch (e) {}
+  function markUpdatesSeen() {
+    updatesSeen = UPDATES[0].id;
+    try { localStorage.setItem("hakken-zukan-updates", String(updatesSeen)); } catch (e) {}
+  }
   var noticeClosed = false;
   try { noticeClosed = localStorage.getItem("hakken-zukan-notice") === "1"; } catch (e) {}
   try { var savedTab = localStorage.getItem("hakken-zukan-tab"); if (savedTab && catDef(savedTab).key === savedTab) state.tab = savedTab; } catch (e) {}
@@ -533,9 +619,12 @@ svg.icon-svg { display: block; }
   }
   function persistSlots() { return persistSlotsFor(curCat(), state.slots); }
   function persistCandidates() { return persistCandidatesFor(curCat(), state.candidates); }
-  function savePhoto(id, photo, foundAt) {
+  // photo: 表示用（編集後）の写真 / orig: 編集前の元写真 / edit: 編集の設定（あとで編集し直せるように保存）
+  function savePhoto(id, photo, foundAt, orig, edit) {
     if (!photo) return idbDelete(PHOTO_PREFIX + id).catch(function () {});
-    return idbSet(PHOTO_PREFIX + id, JSON.stringify({ photo: photo, foundAt: foundAt })).catch(function (e) { console.error("写真の保存に失敗しました", e); });
+    var rec = { photo: photo, foundAt: foundAt };
+    if (orig && orig !== photo) { rec.orig = orig; rec.edit = edit || null; }
+    return idbSet(PHOTO_PREFIX + id, JSON.stringify(rec)).catch(function (e) { console.error("写真の保存に失敗しました", e); });
   }
   // 空欄の数が候補の種類数より少なければ、足りない分を追加（減らすことはしない）
   function ensureSlots() {
@@ -604,7 +693,7 @@ svg.icon-svg { display: block; }
       return Promise.all(meta.map(function (m) {
         return idbGet(PHOTO_PREFIX + m.id).then(function (v) {
           var pv = null; try { pv = v ? JSON.parse(v) : null; } catch (e) {}
-          return { id: m.id, names: namesOf(m), photo: pv ? pv.photo : null, foundAt: pv ? pv.foundAt : null };
+          return { id: m.id, names: namesOf(m), photo: pv ? pv.photo : null, foundAt: pv ? pv.foundAt : null, orig: pv && pv.orig || null, edit: pv && pv.edit || null };
         }).catch(function () { return { id: m.id, names: namesOf(m), photo: null, foundAt: null }; });
       })).then(function (slots) {
         // 候補が増えたときだけ、足りない空欄を追加（自分で削除した枠は勝手に戻さない）
@@ -634,6 +723,11 @@ svg.icon-svg { display: block; }
   function init() {
     Promise.all(CATS.map(loadCat)).then(function (results) {
       CATS.forEach(function (cat, i) { state.cats[cat.key] = results[i]; });
+      // はじめて使う人にはお知らせを出さない（前から使っている人にだけ出す）
+      if (updatesSeen === null) {
+        var used = CATS.some(function (cat) { return state.cats[cat.key].slots.some(function (x) { return x.photo || x.names.length; }); });
+        if (used) updatesSeen = 0; else markUpdatesSeen();
+      }
       state.loaded = true; render();
     });
   }
@@ -655,7 +749,7 @@ svg.icon-svg { display: block; }
   function openEntry(id) {
     var s = state.slots.filter(function (x) { return x.id === id; })[0];
     if (!s) return;
-    state.modal = { type: "entry", id: id, photo: s.photo, names: s.names.slice(), query: "" };
+    state.modal = { type: "entry", id: id, photo: s.photo, orig: s.orig || null, edit: s.edit || null, names: s.names.slice(), query: "" };
     renderModal();
   }
   function saveEntry() {
@@ -664,15 +758,15 @@ svg.icon-svg { display: block; }
       if (s.id !== m.id) return s;
       var photoChanged = s.photo !== m.photo;
       var foundAt = m.photo ? (photoChanged ? new Date().toISOString() : s.foundAt) : null;
-      if (photoChanged) savePhoto(s.id, m.photo, foundAt);
-      return Object.assign({}, s, { names: m.names.slice(), photo: m.photo, foundAt: foundAt });
+      if (photoChanged) savePhoto(s.id, m.photo, foundAt, m.orig, m.edit);
+      return Object.assign({}, s, { names: m.names.slice(), photo: m.photo, foundAt: foundAt, orig: m.photo ? m.orig : null, edit: m.photo ? m.edit : null });
     });
     persistSlots();
     closeModal();
     render();
   }
   function clearSlot(id) {
-    state.slots = state.slots.map(function (s) { return s.id === id ? Object.assign({}, s, { names: [], photo: null, foundAt: null }) : s; });
+    state.slots = state.slots.map(function (s) { return s.id === id ? Object.assign({}, s, { names: [], photo: null, foundAt: null, orig: null, edit: null }) : s; });
     savePhoto(id, null); persistSlots();
     closeModal(); render();
   }
@@ -689,7 +783,7 @@ svg.icon-svg { display: block; }
   }
   function resetAll() {
     state.slots.forEach(function (s) { if (s.photo) savePhoto(s.id, null); });
-    state.slots = state.slots.map(function (s) { return Object.assign({}, s, { names: [], photo: null, foundAt: null }); });
+    state.slots = state.slots.map(function (s) { return Object.assign({}, s, { names: [], photo: null, foundAt: null, orig: null, edit: null }); });
     persistSlots(); closeModal(); render();
   }
   function initializeAll() {
@@ -756,6 +850,244 @@ svg.icon-svg { display: block; }
   }
 
 
+  // ---------- 写真の編集（トリミング・回転・明るさ・フィルター） ----------
+  var FILTERS = [
+    { key: "none", label: "なし" },
+    { key: "mono", label: "モノクロ" },
+    { key: "sepia", label: "セピア" },
+    { key: "warm", label: "あたたか" },
+    { key: "cool", label: "ひんやり" },
+    { key: "vivid", label: "ビビッド" },
+    { key: "fade", label: "ふんわり" }
+  ];
+  var EDIT_OUT = 1000; // 編集後の写真の大きさ（正方形）
+  var editor = null;
+
+  function defaultEdit() {
+    return { rot: 0, zoom: null, tx: 0, ty: 0, fill: "white", bright: 0, contrast: 0, sat: 0, filter: "none" };
+  }
+  function rotDims(img, rot) { return rot % 2 ? [img.height, img.width] : [img.width, img.height]; }
+  function zoomRange(img, ed) {
+    var d = rotDims(img, ed.rot);
+    var cover = Math.max(d[0], d[1]) / Math.min(d[0], d[1]);
+    return { min: 1, cover: cover, max: cover * 4 }; // 1 = 全体が入る大きさ
+  }
+  function clampEdit(img, ed) {
+    var r = zoomRange(img, ed);
+    if (ed.zoom == null) ed.zoom = r.cover;
+    ed.zoom = Math.min(r.max, Math.max(r.min, ed.zoom));
+    var d = rotDims(img, ed.rot), mx = Math.max(d[0], d[1]);
+    var dw = ed.zoom * d[0] / mx, dh = ed.zoom * d[1] / mx; // 正方形を1としたときの写真の大きさ
+    var rx = Math.abs(dw - 1) / 2, ry = Math.abs(dh - 1) / 2;
+    ed.tx = Math.min(rx, Math.max(-rx, ed.tx));
+    ed.ty = Math.min(ry, Math.max(-ry, ed.ty));
+  }
+  function drawEdited(cv, S, img, ed, skipColor) {
+    cv.width = S; cv.height = S;
+    var ctx = cv.getContext("2d");
+    var d = rotDims(img, ed.rot);
+    // 余白
+    if (ed.fill === "blur") {
+      var t = document.createElement("canvas"); t.width = 24; t.height = 24;
+      var tc = t.getContext("2d"), kc = 24 / Math.min(d[0], d[1]);
+      tc.translate(12, 12); tc.rotate(ed.rot * Math.PI / 2);
+      tc.drawImage(img, -img.width * kc / 2, -img.height * kc / 2, img.width * kc, img.height * kc);
+      ctx.imageSmoothingEnabled = true; ctx.imageSmoothingQuality = "high";
+      ctx.drawImage(t, 0, 0, S, S);
+      ctx.fillStyle = "rgba(255,255,255,0.18)"; ctx.fillRect(0, 0, S, S);
+    } else {
+      ctx.fillStyle = ed.fill === "black" ? "#111111" : "#ffffff";
+      ctx.fillRect(0, 0, S, S);
+    }
+    // 写真
+    ctx.save();
+    ctx.imageSmoothingEnabled = true; ctx.imageSmoothingQuality = "high";
+    ctx.translate(S / 2 + ed.tx * S, S / 2 + ed.ty * S);
+    ctx.rotate(ed.rot * Math.PI / 2);
+    var k = ed.zoom * S / Math.max(d[0], d[1]);
+    ctx.drawImage(img, -img.width * k / 2, -img.height * k / 2, img.width * k, img.height * k);
+    ctx.restore();
+    if (!skipColor) applyColor(ctx, S, ed);
+  }
+  // 明るさ・コントラスト・鮮やかさ・フィルターを1ピクセルずつ反映（どのブラウザでも同じ見た目になるように）
+  function applyColor(ctx, S, ed) {
+    if (!ed.bright && !ed.contrast && !ed.sat && ed.filter === "none") return;
+    var im = ctx.getImageData(0, 0, S, S), a = im.data;
+    var br = ed.bright * 1.1;
+    var c = ed.contrast * 1.28, cf = (259 * (c + 255)) / (255 * (259 - c));
+    var sat = 1 + ed.sat / 100;
+    var f = ed.filter;
+    if (f === "vivid") { sat *= 1.35; cf *= 1.08; }
+    if (f === "fade") { sat *= 0.8; }
+    for (var i = 0; i < a.length; i += 4) {
+      var r = a[i], g = a[i + 1], b = a[i + 2], y;
+      if (f === "mono") { y = 0.299 * r + 0.587 * g + 0.114 * b; r = g = b = y; }
+      else if (f === "sepia") { var r0 = r, g0 = g, b0 = b; r = 0.393 * r0 + 0.769 * g0 + 0.189 * b0; g = 0.349 * r0 + 0.686 * g0 + 0.168 * b0; b = 0.272 * r0 + 0.534 * g0 + 0.131 * b0; }
+      else if (f === "warm") { r += 18; g += 5; b -= 18; }
+      else if (f === "cool") { r -= 14; g += 2; b += 20; }
+      else if (f === "fade") { r = r * 0.85 + 32; g = g * 0.85 + 30; b = b * 0.85 + 34; }
+      r += br; g += br; b += br;
+      r = (r - 128) * cf + 128; g = (g - 128) * cf + 128; b = (b - 128) * cf + 128;
+      if (sat !== 1) { y = 0.299 * r + 0.587 * g + 0.114 * b; r = y + (r - y) * sat; g = y + (g - y) * sat; b = y + (b - y) * sat; }
+      a[i] = r; a[i + 1] = g; a[i + 2] = b; // Uint8ClampedArray なので0〜255に自動でおさまる
+    }
+    ctx.putImageData(im, 0, 0);
+  }
+
+  function openEditor(m) {
+    var src = m.orig || m.photo;
+    if (!src) return;
+    loadImage(src).then(function (img) {
+      var ed = m.edit ? JSON.parse(JSON.stringify(m.edit)) : defaultEdit();
+      clampEdit(img, ed);
+      editor = { m: m, img: img, src: src, ed: ed, tab: "crop", ptrs: {}, raf: 0 };
+      renderEditor();
+    }).catch(function () { alert("写真を読み込めませんでした。"); });
+  }
+  function closeEditor() {
+    editor = null;
+    document.getElementById("editor-root").innerHTML = "";
+  }
+  function finishEditor() {
+    var e = editor, cv = document.createElement("canvas");
+    drawEdited(cv, EDIT_OUT, e.img, e.ed);
+    e.m.photo = cv.toDataURL("image/jpeg", 0.86);
+    e.m.orig = e.src;
+    e.m.edit = e.ed;
+    closeEditor();
+    renderModal();
+  }
+  function stageSize() {
+    return Math.floor(Math.max(200, Math.min(window.innerWidth - 32, 420, window.innerHeight * 0.46)));
+  }
+  function scheduleDraw() {
+    if (!editor || editor.raf) return;
+    editor.raf = requestAnimationFrame(function () {
+      if (!editor) return;
+      editor.raf = 0;
+      var cv = document.getElementById("ed-canvas");
+      if (!cv) return;
+      var D = stageSize(), px = Math.round(D * Math.min(window.devicePixelRatio || 1, 2));
+      drawEdited(cv, px, editor.img, editor.ed);
+      cv.style.width = D + "px"; cv.style.height = D + "px";
+    });
+  }
+  // 拡大スライダーは見た目の変化が均等になるよう対数で扱う
+  function zoomToSlider(img, ed) { var r = zoomRange(img, ed); return Math.round(1000 * Math.log(ed.zoom / r.min) / Math.log(r.max / r.min)); }
+  function sliderToZoom(img, ed, v) { var r = zoomRange(img, ed); return r.min * Math.pow(r.max / r.min, v / 1000); }
+
+  function renderEditor() {
+    var e = editor, ed = e.ed;
+    var h = '<div class="editor" role="dialog" aria-label="写真を編集">';
+    h += '<div class="ed-head"><button class="ed-textbtn" id="ed-cancel">キャンセル</button><p class="ed-title">写真を編集</p><button class="ed-done" id="ed-done">完了</button></div>';
+    h += '<div class="ed-stage"><div class="ed-frame"><canvas id="ed-canvas"></canvas><div class="ed-grid"></div></div></div>';
+    h += '<p class="ed-tip">ドラッグで位置合わせ・2本指で拡大縮小</p>';
+    h += '<div class="ed-panel"><div class="ed-tabs">';
+    [["crop", "トリミング"], ["adjust", "明るさ・色味"], ["filter", "フィルター"]].forEach(function (t) {
+      h += '<button class="ed-tab' + (e.tab === t[0] ? " active" : "") + '" data-edtab="' + t[0] + '">' + t[1] + '</button>';
+    });
+    h += '</div><div class="ed-controls">';
+    if (e.tab === "crop") {
+      h += '<label class="ed-row"><span>拡大</span><input type="range" min="0" max="1000" id="ed-zoom" value="' + zoomToSlider(e.img, ed) + '" /></label>';
+      h += '<div class="ed-btns"><button class="ed-chip" id="ed-fit">全体を入れる</button><button class="ed-chip" id="ed-cover">いっぱいに</button><button class="ed-chip" id="ed-rot">' + ICON_ROTATE + '回転</button></div>';
+      h += '<div class="ed-row2"><span>余白の色</span><div class="ed-btns">';
+      [["white", "白"], ["black", "黒"], ["blur", "ぼかし"]].forEach(function (o) {
+        h += '<button class="ed-chip' + (ed.fill === o[0] ? " on" : "") + '" data-fill="' + o[0] + '">' + o[1] + '</button>';
+      });
+      h += '</div></div>';
+    } else if (e.tab === "adjust") {
+      [["bright", "明るさ"], ["contrast", "コントラスト"], ["sat", "鮮やかさ"]].forEach(function (o) {
+        h += '<label class="ed-row"><span>' + o[1] + '</span><input type="range" min="-100" max="100" step="1" data-adj="' + o[0] + '" value="' + ed[o[0]] + '" /><b data-adjval="' + o[0] + '">' + ed[o[0]] + '</b></label>';
+      });
+    } else {
+      h += '<div class="ed-filters">';
+      FILTERS.forEach(function (fl) {
+        h += '<button class="ed-filter' + (ed.filter === fl.key ? " on" : "") + '" data-filter="' + fl.key + '"><canvas data-fthumb="' + fl.key + '"></canvas><span>' + fl.label + '</span></button>';
+      });
+      h += '</div>';
+    }
+    h += '</div><button class="ed-reset" id="ed-reset">すべて元に戻す</button></div></div>';
+    document.getElementById("editor-root").innerHTML = h;
+
+    document.getElementById("ed-cancel").onclick = closeEditor;
+    document.getElementById("ed-done").onclick = finishEditor;
+    document.getElementById("ed-reset").onclick = function () {
+      e.ed = defaultEdit(); clampEdit(e.img, e.ed); renderEditor();
+    };
+    document.querySelectorAll("[data-edtab]").forEach(function (b) {
+      b.onclick = function () { e.tab = b.getAttribute("data-edtab"); renderEditor(); };
+    });
+    var zs = document.getElementById("ed-zoom");
+    if (zs) zs.oninput = function () { ed.zoom = sliderToZoom(e.img, ed, +zs.value); clampEdit(e.img, ed); scheduleDraw(); };
+    var fit = document.getElementById("ed-fit");
+    if (fit) fit.onclick = function () { ed.zoom = 1; ed.tx = 0; ed.ty = 0; clampEdit(e.img, ed); renderEditor(); };
+    var cov = document.getElementById("ed-cover");
+    if (cov) cov.onclick = function () { ed.zoom = zoomRange(e.img, ed).cover; ed.tx = 0; ed.ty = 0; clampEdit(e.img, ed); renderEditor(); };
+    var rot = document.getElementById("ed-rot");
+    if (rot) rot.onclick = function () {
+      var r = zoomRange(e.img, ed), wasCover = Math.abs(ed.zoom - r.cover) < 1e-6, wasFit = ed.zoom === 1;
+      ed.rot = (ed.rot + 1) % 4; ed.tx = 0; ed.ty = 0;
+      if (wasCover) ed.zoom = zoomRange(e.img, ed).cover; else if (wasFit) ed.zoom = 1;
+      clampEdit(e.img, ed); renderEditor();
+    };
+    document.querySelectorAll("[data-fill]").forEach(function (b) {
+      b.onclick = function () { ed.fill = b.getAttribute("data-fill"); renderEditor(); };
+    });
+    document.querySelectorAll("[data-adj]").forEach(function (inp) {
+      inp.oninput = function () {
+        var k = inp.getAttribute("data-adj");
+        ed[k] = +inp.value;
+        var lab = document.querySelector('[data-adjval="' + k + '"]'); if (lab) lab.textContent = inp.value;
+        scheduleDraw();
+      };
+      inp.ondblclick = function () { ed[inp.getAttribute("data-adj")] = 0; renderEditor(); };
+    });
+    document.querySelectorAll("[data-filter]").forEach(function (b) {
+      b.onclick = function () { ed.filter = b.getAttribute("data-filter"); renderEditor(); };
+    });
+    // フィルターの見本（小さい画像）
+    document.querySelectorAll("[data-fthumb]").forEach(function (c) {
+      var tmp = JSON.parse(JSON.stringify(ed)); tmp.filter = c.getAttribute("data-fthumb");
+      drawEdited(c, 120, e.img, tmp);
+    });
+
+    // ドラッグで移動・2本指で拡大
+    var cv = document.getElementById("ed-canvas");
+    cv.onpointerdown = function (ev) {
+      cv.setPointerCapture(ev.pointerId);
+      e.ptrs[ev.pointerId] = { x: ev.clientX, y: ev.clientY };
+    };
+    cv.onpointermove = function (ev) {
+      var p = e.ptrs[ev.pointerId];
+      if (!p) return;
+      var D = stageSize(), ids = Object.keys(e.ptrs);
+      if (ids.length === 1) {
+        ed.tx += (ev.clientX - p.x) / D; ed.ty += (ev.clientY - p.y) / D;
+      } else if (ids.length >= 2) {
+        var other = e.ptrs[ids[0] == ev.pointerId ? ids[1] : ids[0]];
+        var d0 = Math.hypot(p.x - other.x, p.y - other.y);
+        var d1 = Math.hypot(ev.clientX - other.x, ev.clientY - other.y);
+        if (d0 > 0) ed.zoom *= d1 / d0;
+        ed.tx += (ev.clientX - p.x) / 2 / D; ed.ty += (ev.clientY - p.y) / 2 / D;
+      }
+      p.x = ev.clientX; p.y = ev.clientY;
+      clampEdit(e.img, ed);
+      var z = document.getElementById("ed-zoom"); if (z) z.value = zoomToSlider(e.img, ed);
+      scheduleDraw();
+    };
+    cv.onpointerup = cv.onpointercancel = function (ev) { delete e.ptrs[ev.pointerId]; };
+    cv.onwheel = function (ev) {
+      ev.preventDefault();
+      ed.zoom *= Math.exp(-ev.deltaY / 400);
+      clampEdit(e.img, ed);
+      var z = document.getElementById("ed-zoom"); if (z) z.value = zoomToSlider(e.img, ed);
+      scheduleDraw();
+    };
+    scheduleDraw();
+  }
+  window.addEventListener("resize", function () { if (editor) scheduleDraw(); });
+
+
   // ---------- 描画（メイン） ----------
   function render() {
     var app = document.getElementById("app");
@@ -788,7 +1120,7 @@ svg.icon-svg { display: block; }
     h += '    <button class="btn-pill ghost-btn" id="btn-reset"><span class="icon">' + ICON_RESET + '</span>リセット</button>';
     h += '  </div>';
     h += '</div>';
-    h += '<h1 class="title">' + escapeHtml(TITLE) + '</h1>';
+    h += '<h1 class="title">' + escapeHtml(TITLE).replace("！", "！<wbr>") + '</h1>';
     h += '<p class="title-sub">「' + escapeHtml(EVENT_NAME) + '」を回るときに使える、ファンが作った非公式の記録ツールです。</p>';
     h += '<div class="progress-row">';
     h += '  <div class="progress-badge"><span class="progress-num">' + species + '</span><span class="progress-slash">/</span><span class="progress-den">' + kinds + '</span></div>';
@@ -796,6 +1128,12 @@ svg.icon-svg { display: block; }
     h += '</div>';
     h += '<p class="progress-sub">登録した写真 <b>' + filled + '</b> 枚 / 空欄 <b>' + total + '</b> 枠' + (curCat().initialSlots ? '（足りなくなったら一番下の「空欄を追加」で増やせます）' : '') + '</p>';
     h += '</header></div>';
+
+    if (updatesSeen !== null && updatesSeen < UPDATES[0].id) {
+      var u = UPDATES[0];
+      h += '<div class="update-banner" role="status"><span class="update-new">NEW</span><div class="update-text"><small>更新のお知らせ ' + escapeHtml(u.date) + '</small><b>' + escapeHtml(u.title) + '</b></div>';
+      h += '<button class="update-more" id="btn-upd-more">くわしく</button><button class="notice-close" id="btn-upd-close" aria-label="閉じる">' + ICON_X + '</button></div>';
+    }
 
     if (!noticeClosed) {
       h += '<div class="notice" role="note"><b>このサイトはファンが個人で作った非公式ツールです。</b>公式とは関係ありません。ご理解のうえで、イベントを楽しんでください！（くわしくはページの一番下）';
@@ -853,12 +1191,17 @@ svg.icon-svg { display: block; }
     h += '<p>これらの点をご理解いただいたうえで、ご利用ください。</p>';
     h += '<p>イベントの開催期間・場所などの詳しい情報は、<a href="' + EVENT_URL + '" target="_blank" rel="noopener">公式サイト</a>をご確認ください。</p>';
     h += '<p>バグや不具合を見つけたときは、X（旧Twitter）の <a href="https://x.com/michiru_poke" target="_blank" rel="noopener">@michiru_poke</a> までお知らせください。</p>';
+    h += '<p><button class="text-btn" id="btn-updates">更新履歴を見る</button></p>';
     h += '<p class="enjoy">イベントのおともに、気軽に楽しんでもらえたらうれしいです！</p>';
     h += '</footer>';
 
     app.innerHTML = h;
 
     document.getElementById("btn-download").onclick = handleDownload;
+    function openUpdates() { markUpdatesSeen(); state.modal = { type: "updates" }; render(); renderModal(); }
+    var um = document.getElementById("btn-upd-more"); if (um) um.onclick = openUpdates;
+    var uc = document.getElementById("btn-upd-close"); if (uc) uc.onclick = function () { markUpdatesSeen(); render(); };
+    var uh = document.getElementById("btn-updates"); if (uh) uh.onclick = openUpdates;
     var nb = document.getElementById("btn-notice");
     if (nb) nb.onclick = function () {
       noticeClosed = true;
@@ -906,6 +1249,15 @@ svg.icon-svg { display: block; }
         ? '「保存する」を押して、出てきたメニューの<b>「画像を保存」</b>を選ぶと写真アプリに保存されます。<br>または、上の画像を<b>長押し</b>して<b>「"写真"に追加」</b>でも保存できます。'
         : '「ダウンロード」で保存できます。スマホでは、上の画像を<b>長押し</b>して<b>「"写真"に追加」</b>（Androidは「画像をダウンロード」）でも保存できます。') + '</p>';
       h += '<div class="modal-actions"><button class="btn-cancel" id="m-cancel2">とじる</button><button class="btn-primary" id="m-ok">' + (share ? "保存する" : "ダウンロード") + '</button></div></div>';
+    } else if (m.type === "updates") {
+      h += '<div class="modal"><div class="modal-head"><p class="modal-title">更新のお知らせ</p><button class="modal-close" id="m-cancel">' + ICON_X + '</button></div>';
+      h += '<div class="updates-list">';
+      UPDATES.forEach(function (u) {
+        h += '<section class="update-item"><p class="update-date">' + escapeHtml(u.date) + '</p><p class="update-title">' + escapeHtml(u.title) + '</p><ul>';
+        u.items.forEach(function (it) { h += '<li>' + escapeHtml(it) + '</li>'; });
+        h += '</ul></section>';
+      });
+      h += '</div><div class="modal-actions"><button class="btn-primary" id="m-cancel2">とじる</button></div></div>';
     } else if (m.type === "cands") {
       h += '<div class="modal"><div class="modal-head"><p class="modal-title">名前の候補を編集</p><button class="modal-close" id="m-cancel">' + ICON_X + '</button></div>';
       h += '<p class="modal-body" style="margin-bottom:8px">1行に1つずつ書いてください。重複は自動でまとめます。</p>';
@@ -922,6 +1274,7 @@ svg.icon-svg { display: block; }
       h += m.photo ? '<img class="photo-thumb" src="' + m.photo + '" alt="" />' : '<span class="photo-thumb">' + ICON_IMAGE + '</span>';
       h += '<span class="photo-pick-text">' + (m.photo ? "写真を変更する" : "タップして写真をえらぶ") + '<small>' + (m.photo ? "タップで選び直し" : "カメラロールから選べます") + '</small></span>';
       h += '<input type="file" accept="image/*" id="m-file" class="hidden-input" /></label>';
+      if (m.photo) h += '<button class="edit-photo-btn" id="m-edit">' + ICON_EDIT + '写真を編集<small>トリミング・回転・明るさ・フィルター</small></button>';
       h += '<p class="step-label"><span class="step-num ' + (m.names.length ? "done" : "") + '">2</span>写っているポケモンを候補からえらぶ（何匹でもOK）</p>';
       h += '<div class="search-wrap"><span class="search-icon">' + ICON_SEARCH + '</span><input class="search-input" id="m-search" placeholder="名前でさがす（ひらがなOK）" value="' + escapeHtml(m.query) + '" autocomplete="off" /></div>';
       h += '<div class="sel-chips" id="m-selected"></div>';
@@ -961,9 +1314,11 @@ svg.icon-svg { display: block; }
         var f = e.target.files[0];
         e.target.value = "";
         if (!f) return;
-        resizeImage(f).then(function (url) { m.photo = url; renderModal(); })
+        resizeImage(f).then(function (url) { m.photo = url; m.orig = url; m.edit = null; renderModal(); })
           .catch(function () { alert("写真を読み込めませんでした。別の写真でお試しください。"); });
       };
+      var eb = document.getElementById("m-edit");
+      if (eb) eb.onclick = function () { openEditor(m); };
       var search = document.getElementById("m-search");
       search.oninput = function () { m.query = search.value; renderCandList(); };
       document.getElementById("m-ok").onclick = saveEntry;
