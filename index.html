@@ -1,0 +1,1032 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+<title>はっけん！ポケモン図鑑</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Mochiy+Pop+One&family=Noto+Sans+JP:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap');
+
+* { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; }
+button { font-family: inherit; touch-action: manipulation; -webkit-tap-highlight-color: transparent; }
+
+:root {
+  --red: #E8484F;
+  --red-dark: #C8323A;
+  --navy: #23244A;
+  --ink: #3A3B63;
+  --sub: #7A7B9E;
+  --yellow: #FFCB3D;
+  --cream: #FFF8EA;
+  --line: rgba(35,36,74,0.18);
+}
+
+#app {
+  font-family: 'Noto Sans JP', sans-serif;
+  background:
+    radial-gradient(circle at 12px 12px, rgba(232,72,79,0.07) 2px, transparent 2.5px),
+    linear-gradient(180deg, #FFF8EA 0%, #FFEFD9 55%, #FFE4D2 100%);
+  background-size: 24px 24px, 100% 100%;
+  min-height: 100vh;
+  padding: 0 16px 60px;
+  color: var(--navy);
+}
+
+/* ---------- header ---------- */
+.dex-top {
+  margin: 0 -16px 20px;
+  background: var(--red);
+  padding: 16px 16px 18px;
+  border-bottom: 5px solid var(--navy);
+  position: relative;
+}
+.dex-top::after {
+  content: ""; position: absolute; left: 0; right: 0; bottom: -11px; height: 6px;
+  background: repeating-linear-gradient(90deg, var(--navy) 0 8px, transparent 8px 16px);
+  opacity: .15;
+}
+.rally-header { max-width: 640px; margin: 0 auto; }
+.rally-header-top { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px; }
+.eyebrow {
+  font-family: 'Space Mono', monospace; font-size: 11px; letter-spacing: 0.14em;
+  color: #FFE1DF; margin: 0; display: flex; align-items: center; gap: 6px;
+}
+.lamp { width: 12px; height: 12px; border-radius: 50%; background: #7FD6FF; border: 2px solid #fff; box-shadow: 0 0 8px #7FD6FF; }
+.header-actions { display: flex; align-items: center; flex-wrap: wrap; justify-content: flex-end; gap: 8px; }
+
+.btn-pill {
+  display: flex; align-items: center; gap: 5px;
+  border-radius: 999px; padding: 5px 12px; font-size: 12px; cursor: pointer;
+}
+.print-btn { background: var(--yellow); border: 1px solid var(--yellow); color: var(--navy); font-weight: 600; }
+.print-btn:hover { background: #FFD968; }
+.print-btn:disabled { opacity: 0.6; cursor: default; }
+.ghost-btn { background: rgba(255,255,255,0.14); border: 1px solid rgba(255,255,255,0.5); color: #fff; }
+.ghost-btn:hover { background: rgba(255,255,255,0.26); }
+
+.title {
+  font-family: 'Mochiy Pop One', sans-serif; font-weight: 400;
+  font-size: 30px; margin: 10px 0 14px; color: #FFFFFF;
+  text-shadow: 2px 2px 0 var(--red-dark), 0 3px 0 rgba(35,36,74,0.25);
+}
+
+.title-sub { margin: -6px 0 14px; font-size: 12px; line-height: 1.6; color: #FFE1DF; }
+.progress-row { display: flex; align-items: center; gap: 12px; }
+.progress-badge {
+  font-family: 'Space Mono', monospace; display: flex; align-items: baseline;
+  background: #fff; color: var(--red); border-radius: 10px; padding: 5px 12px;
+  font-size: 15px; flex-shrink: 0; border: 2px solid var(--navy);
+}
+.progress-num { font-size: 19px; font-weight: 700; }
+.progress-slash { margin: 0 3px; opacity: 0.5; }
+.progress-den { color: var(--navy); }
+.progress-bar-track { flex: 1; height: 10px; background: rgba(255,255,255,0.3); border-radius: 999px; overflow: hidden; border: 2px solid rgba(35,36,74,0.25); }
+.progress-bar-fill { height: 100%; background: linear-gradient(90deg, #FFE27A, var(--yellow)); border-radius: 999px; transition: width .4s ease; }
+.progress-sub { margin: 8px 0 0; font-size: 12px; color: #FFE1DF; }
+.progress-sub b { color: #fff; font-family: 'Space Mono', monospace; }
+
+/* ---------- banners / rows ---------- */
+.complete-banner {
+  max-width: 640px; margin: 0 auto 18px; background: #fff;
+  border: 2px solid var(--yellow); border-radius: 14px; padding: 14px 18px;
+  display: flex; align-items: center; gap: 14px; box-shadow: 0 4px 0 rgba(255,203,61,0.45);
+}
+.complete-seal { color: var(--yellow); flex-shrink: 0; }
+.complete-title { font-family: 'Mochiy Pop One', sans-serif; font-size: 17px; margin: 0; color: var(--red); }
+.complete-sub { font-size: 12.5px; margin: 2px 0 0; color: var(--ink); }
+
+.tabs {
+  max-width: 640px; margin: 0 auto 16px; display: flex; gap: 4px;
+  background: #fff; border: 2px solid var(--navy); border-radius: 14px; padding: 4px;
+}
+.tab {
+  flex: 1; min-width: 0; border: none; background: transparent; border-radius: 10px; padding: 7px 6px;
+  font-size: 13px; font-weight: 700; color: var(--ink); cursor: pointer;
+  display: flex; flex-direction: column; align-items: center; gap: 1px;
+}
+.tab small { font-family: 'Space Mono', monospace; font-size: 11px; color: var(--sub); }
+.tab.active { background: var(--red); color: #fff; }
+.tab.active small { color: #FFE1DF; }
+.sort-row { max-width: 640px; margin: 0 auto 16px; display: flex; align-items: center; justify-content: space-between; gap: 10px; flex-wrap: wrap; }
+.sort-left { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+.sort-label { font-size: 12px; color: var(--sub); flex-shrink: 0; }
+.sort-buttons { display: flex; gap: 6px; flex-wrap: wrap; }
+.sort-btn {
+  background: #fff; border: 1px solid var(--line); border-radius: 999px;
+  padding: 5px 12px; font-size: 12px; color: var(--ink); cursor: pointer;
+}
+.sort-btn:hover { border-color: var(--red); }
+.sort-btn-active { background: var(--navy); border-color: var(--navy); color: #fff; font-weight: 600; }
+.text-btn { background: none; border: none; color: var(--red); font-size: 12px; cursor: pointer; padding: 4px 0; text-decoration: underline; text-underline-offset: 3px; }
+
+/* ---------- grid ---------- */
+.grid { max-width: 640px; margin: 0 auto; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px 14px; }
+@media (min-width: 560px) { .grid { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+
+.card { display: flex; flex-direction: column; min-width: 0; }
+.card-square { position: relative; width: 100%; aspect-ratio: 1 / 1; }
+.tile {
+  position: absolute; inset: 0; width: 100%; height: 100%;
+  border-radius: 16px; overflow: hidden; cursor: pointer; display: flex;
+  padding: 0; font: inherit; color: inherit; text-align: center;
+}
+.tile-empty {
+  background: rgba(255,255,255,0.65); border: 2px dashed rgba(35,36,74,0.28);
+  align-items: center; justify-content: center;
+}
+.tile-empty:hover { border-color: var(--red); background: #fff; }
+.tile-empty-inner { display: flex; flex-direction: column; align-items: center; gap: 6px; color: var(--sub); padding: 6px; }
+.tile-q { font-family: 'Mochiy Pop One', sans-serif; font-size: 26px; color: rgba(35,36,74,0.18); line-height: 1; }
+.tile-empty-hint { font-size: 10.5px; line-height: 1.3; }
+.tile-filled { border: 3px solid #fff; box-shadow: 0 0 0 2px var(--navy), 0 4px 0 2px rgba(35,36,74,0.18); background: #fff; }
+.tile-photo { width: 100%; height: 100%; object-fit: cover; display: block; }
+.tile-partial { background: #fff; border: 2px solid var(--red); align-items: center; justify-content: center; }
+.tile-need {
+  position: absolute; left: 6px; bottom: 6px; background: var(--red); color: #fff;
+  font-size: 10px; font-weight: 700; padding: 2px 8px; border-radius: 999px;
+}
+.tile-no {
+  position: absolute; top: 7px; left: 7px; z-index: 2;
+  font-family: 'Space Mono', monospace; font-size: 10.5px; font-weight: 700;
+  background: rgba(255,255,255,0.92); color: var(--navy); border-radius: 6px; padding: 1px 6px;
+  pointer-events: none;
+}
+.add-tile { border-style: solid; border-color: transparent; background: rgba(255,255,255,0.45); }
+
+.stamp-mark {
+  position: absolute; bottom: -8px; right: -8px; pointer-events: none;
+  animation: stamp-pop .55s cubic-bezier(.34,1.56,.64,1) both;
+  filter: drop-shadow(0 2px 2px rgba(35,36,74,0.3));
+}
+@keyframes stamp-pop {
+  0% { transform: scale(.2) rotate(-20deg); opacity: 0; }
+  65% { transform: scale(1.12) rotate(4deg); opacity: 1; }
+  100% { transform: scale(1) rotate(-8deg); opacity: 1; }
+}
+
+.card-label {
+  margin-top: 7px; min-height: 20px; display: flex; align-items: center; gap: 4px;
+  font-family: 'Mochiy Pop One', sans-serif; font-size: 13px; color: var(--navy);
+  overflow: hidden;
+}
+.card-label span { overflow: hidden; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; line-height: 1.45; word-break: break-all; }
+.tile-count {
+  position: absolute; top: 7px; right: 7px; z-index: 2; pointer-events: none;
+  background: var(--red); color: #fff; font-size: 10.5px; font-weight: 700;
+  border-radius: 999px; padding: 1px 8px; border: 2px solid #fff;
+}
+.sel-chips { display: flex; flex-wrap: wrap; gap: 6px; margin: 0 0 8px; min-height: 18px; align-items: center; }
+.sel-chip {
+  background: var(--red); color: #fff; border: none; border-radius: 999px; padding: 4px 6px 4px 11px;
+  font-size: 12.5px; font-weight: 700; display: inline-flex; align-items: center; gap: 4px; cursor: pointer;
+}
+.sel-chip .x { background: rgba(255,255,255,.3); border-radius: 50%; width: 16px; height: 16px; display: inline-flex; align-items: center; justify-content: center; font-size: 11px; line-height: 1; }
+.sel-empty { font-size: 12px; color: var(--sub); }
+.card-label.unknown { color: rgba(35,36,74,0.35); letter-spacing: .1em; }
+
+.hidden-input { display: none; }
+
+/* ---------- modal ---------- */
+.modal-backdrop {
+  position: fixed; inset: 0; background: rgba(35,36,74,0.55);
+  display: flex; align-items: flex-end; justify-content: center; padding: 0; z-index: 20;
+}
+@media (min-width: 560px) { .modal-backdrop { align-items: center; padding: 20px; } }
+.modal {
+  background: var(--cream); border-radius: 18px 18px 0 0; padding: 18px 16px 20px;
+  max-width: 460px; width: 100%; max-height: 92vh; max-height: 92dvh; display: flex; flex-direction: column;
+  padding-bottom: calc(20px + env(safe-area-inset-bottom, 0px));
+  border-top: 6px solid var(--red);
+}
+@media (min-width: 560px) { .modal { border-radius: 18px; } }
+.modal.small { max-width: 340px; border-radius: 16px; margin: auto 16px; }
+.modal-head { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-bottom: 12px; }
+.modal-title { font-family: 'Mochiy Pop One', sans-serif; font-size: 16px; margin: 0; color: var(--navy); }
+.modal-no { font-family: 'Space Mono', monospace; color: var(--red); font-size: 12px; margin-right: 6px; }
+.modal-close { background: none; border: none; color: var(--sub); cursor: pointer; display: flex; padding: 4px; }
+.modal-body { font-size: 12.5px; color: var(--ink); margin: 0 0 16px; line-height: 1.6; }
+.modal-actions { display: flex; justify-content: flex-end; gap: 10px; flex-wrap: wrap; }
+.btn-cancel { background: #fff; border: 1px solid var(--line); border-radius: 10px; padding: 9px 14px; font-size: 13px; cursor: pointer; color: var(--ink); }
+.btn-primary { background: var(--red); border: none; border-radius: 10px; padding: 9px 18px; font-size: 13px; color: #fff; font-weight: 700; cursor: pointer; }
+.btn-primary:disabled { background: #E7B7B9; cursor: default; }
+.btn-danger { background: none; border: none; color: var(--red); font-size: 12px; cursor: pointer; padding: 9px 4px; margin-right: auto; }
+
+.step-label { font-size: 12px; font-weight: 700; color: var(--ink); margin: 0 0 6px; display: flex; align-items: center; gap: 6px; }
+.step-num { width: 18px; height: 18px; border-radius: 50%; background: var(--navy); color: #fff; font-size: 11px; display: inline-flex; align-items: center; justify-content: center; font-family: 'Space Mono', monospace; }
+.step-num.done { background: var(--red); }
+
+.photo-pick {
+  display: flex; align-items: center; gap: 12px; background: #fff; border: 2px dashed rgba(35,36,74,0.25);
+  border-radius: 14px; padding: 10px; cursor: pointer; margin-bottom: 14px;
+}
+.photo-pick.has { border-style: solid; border-color: var(--navy); }
+.photo-thumb { width: 72px; height: 72px; border-radius: 10px; object-fit: cover; flex-shrink: 0; background: #F3EEE3; display: flex; align-items: center; justify-content: center; color: var(--sub); }
+.photo-pick-text { font-size: 12.5px; color: var(--ink); line-height: 1.5; }
+.photo-pick-text small { color: var(--sub); display: block; }
+
+.search-wrap { position: relative; margin-bottom: 8px; }
+.search-input {
+  width: 100%; border: 2px solid var(--line); border-radius: 12px; padding: 9px 12px 9px 34px;
+  font-family: 'Noto Sans JP', sans-serif; font-size: 16px; background: #fff; color: var(--navy); outline: none;
+}
+.search-input:focus { border-color: var(--navy); }
+.search-icon { position: absolute; left: 11px; top: 50%; transform: translateY(-50%); color: var(--sub); display: flex; }
+.selected-name { font-size: 12px; color: var(--sub); margin: 0 0 8px; min-height: 18px; }
+.selected-name b { color: var(--red); font-family: 'Mochiy Pop One', sans-serif; font-weight: 400; font-size: 14px; }
+
+.cand-list {
+  flex: 1; min-height: 120px; max-height: 38vh; overflow-y: auto; -webkit-overflow-scrolling: touch;
+  display: flex; flex-wrap: wrap; gap: 6px; align-content: flex-start;
+  padding: 2px 2px 8px; margin-bottom: 14px;
+}
+.cand {
+  background: #fff; border: 1px solid var(--line); border-radius: 999px; padding: 6px 12px;
+  font-size: 13px; color: var(--navy); cursor: pointer; display: inline-flex; align-items: center; gap: 5px;
+}
+.cand:hover { border-color: var(--red); }
+.cand.used { color: var(--sub); background: #F6F1E6; }
+.cand.used::after { content: "済"; font-size: 9.5px; background: var(--sub); color: #fff; border-radius: 4px; padding: 0 4px; }
+.cand.active { background: var(--red); border-color: var(--red); color: #fff; font-weight: 700; }
+.cand.active::after { background: #fff; color: var(--red); }
+.cand.custom { border-style: dashed; border-color: var(--red); color: var(--red); }
+.cand-empty { font-size: 12px; color: var(--sub); padding: 8px 2px; }
+
+.cand-textarea {
+  width: 100%; height: 46vh; border: 2px solid var(--line); border-radius: 12px; padding: 10px 12px;
+  font-family: 'Noto Sans JP', sans-serif; font-size: 16px; line-height: 1.7; color: var(--navy); background: #fff; outline: none; resize: vertical; margin-bottom: 14px;
+}
+
+.export-preview { flex: 1; min-height: 0; overflow: auto; background: #fff; border: 2px solid var(--line); border-radius: 12px; margin-bottom: 10px; text-align: center; }
+.export-preview img { display: block; width: 100%; height: auto; -webkit-touch-callout: default; -webkit-user-select: auto; user-select: auto; }
+.export-hint { font-size: 12.5px; color: var(--ink); line-height: 1.6; margin: 0 0 14px; }
+.export-hint b { color: var(--red); }
+.notice {
+  max-width: 640px; margin: 0 auto 16px; background: #fff; border: 2px solid var(--yellow);
+  border-radius: 14px; padding: 12px 40px 12px 14px; position: relative;
+  font-size: 12.5px; line-height: 1.7; color: var(--ink);
+}
+.notice b { color: var(--navy); }
+.notice-close { position: absolute; top: 6px; right: 6px; background: none; border: none; color: var(--sub); cursor: pointer; padding: 6px; display: flex; }
+.site-footer {
+  max-width: 640px; margin: 32px auto 0; padding: 16px 16px 4px; border-top: 2px dashed rgba(35,36,74,0.2);
+  font-size: 12px; line-height: 1.8; color: var(--ink);
+}
+.site-footer h2 { font-family: 'Mochiy Pop One', sans-serif; font-weight: 400; font-size: 14px; color: var(--navy); margin: 0 0 6px; }
+.site-footer p { margin: 0 0 8px; }
+.site-footer .enjoy { color: var(--red); font-weight: 700; }
+.site-footer a { color: var(--red); font-weight: 700; text-underline-offset: 3px; }
+.icon { display: inline-flex; }
+svg.icon-svg { display: block; }
+</style>
+</head>
+<body>
+<div id="app"></div>
+<div id="modal-root"></div>
+
+<script>
+(function () {
+  "use strict";
+
+  // ---------- 設定 ----------
+  var TITLE = "はっけん！ポケモン図鑑";
+  var EVENT_NAME = "レジェンドリサーチ in日本橋＆八重洲";
+  var EVENT_URL = "https://mitsui-shopping-park.com/urban/legend-research/";
+
+  // 名前の候補（「候補を編集」からも変更できます）
+  var DEFAULT_CANDIDATES = ["レジギガス", "レジアイス", "レジロック", "レジスチル", "アンノーン", "ウツロイド", "コスモッグ", "コスモウム", "カミツルギ", "ネクロズマ", "マッシブーン", "ギルガルド（シールドフォルム）", "メルタン", "メタグロス", "デカヌチャン", "パルシェン", "フリーザー", "フリーザー（ガラルのすがた）", "サンダー", "サンダー（ガラルのすがた）", "ファイヤー", "ファイヤー（ガラルのすがた）", "ミュウツー", "ギアル", "ギギアル", "ギギギアル", "オニドリル", "フシギダネ", "ゼニガメ", "ヒトカゲ", "ポッポ", "コラッタ", "ビッパ", "ヤドン", "シェルダー", "ヤドラン", "ニャース", "ニャース（ガラルのすがた）", "ペルシアン", "ニャイキング", "カラナクシ（にしのうみ）", "カラナクシ（ひがしのうみ）", "トリトドン（にしのうみ）", "トリトドン（ひがしのうみ）", "ビリリダマ", "ビリリダマ（ヒスイのすがた）", "マルマイン", "マルマイン（ヒスイのすがた）", "ミュウ", "ガバイト", "メレシー", "ヤミラミ", "チルット", "チルタリス", "ジャラランガ", "ブリジュラス", "タツベイ", "ボーマンダ", "バンギラス", "ドラメシヤ", "ドロンチ", "ドラパルト", "フカマル", "ガブリアス", "キングドラ", "カイリュー", "ヌメルゴン", "セグレイブ", "サザンドラ", "ディグダ", "ダグトリオ", "ウミディグダ", "ウミトリオ", "メノクラゲ", "ドククラゲ", "ノノクラゲ", "リククラゲ", "カビゴン", "カジッチュ", "タルップル", "アマカジ", "ヤバチャ（しんさくフォルム）", "ヤバチャ（がんさくフォルム）", "ポットデス（がんさくフォルム）", "マホイップ", "バニプッチ", "バニリッチ", "バイバニラ", "チャデス（マガイモノのすがた）", "パピモッチ", "バウッツェル", "ホシガリス", "ゴンベ", "ファイアロー", "キャモメ", "ツツケラ", "ピジョン", "タマタマ", "ナゾノクサ", "タマゲタケ", "モロバレル", "スボミー", "カクレオン", "ウソッキー", "デスマス", "デスマス（ガラルのすがた）", "デスカーン", "デスバーン", "イシヘンジン", "ゴルーグ", "オドリドリ（めらめらスタイル）", "オドリドリ（ぱちぱちスタイル）", "オドリドリ（まいまいスタイル）", "オドリドリ（ふらふらスタイル）", "イーユイ", "パオジアン", "チオンジェン", "ディンルー", "シャリタツ（そったすがた）", "シャリタツ（たれたすがた）", "シャリタツ（のびたすがた）", "ヘイラッシャ", "トルネロス（けしんフォルム）", "ボルトロス（けしんフォルム）", "ランドロス（けしんフォルム）", "ラブトロス（けしんフォルム）", "パチリス", "デンチュラ", "ロトム（ロトムのすがた）", "ミミッキュ（ばけたすがた）", "ピチュー", "ライチュウ", "コイル", "カプ・コケコ", "メリープ", "ゼラオラ", "ラクライ", "ライボルト", "モルペコ（まんぷくもよう）", "モルペコ（はらぺこもよう）", "デデンネ", "ゼブライカ", "レアコイル", "エリキテル", "プラスル", "マイナン", "トゲデマル", "エレキッド", "サンダース", "エモンガ", "パモ", "パモット", "パーモット", "ズピカ", "ハラバリー", "ワンパチ", "バチュル", "エンテイ", "ライコウ", "スイクン", "テッポウオ", "マンタイン", "ヨワシ（たんどくのすがた）", "ナミイルカ", "コダック", "ジュゴン", "ペリッパー", "ラプラス", "カイデン", "セレビィ", "パラセクト", "マシェード", "カイロス", "デンヂムシ", "クワガノン", "ヘラクロス", "アブリー", "ヒメンカ", "カリキリ", "ヤバソチャ（けっさくのすがた）", "カミッチュ", "デオキシス", "レックウザ", "メテノ", "ルナトーン", "ピカチュウ"];
+
+  // ---------- IndexedDB ----------
+  var DB_NAME = "hakken-zukan-db";
+  var STORE = "kv";
+  var CAND_VERSION = 15; // 候補を増やしたら数字を上げると、保存済みの候補にも自動で追加されます
+
+  // レジェンドリサーチ（大きな解説パネル）の候補
+  var LEGEND_CANDIDATES = ["フシギバナ", "リザードン", "カメックス", "ホウオウ", "ルギア", "グラードン", "カイオーガ", "ディアルガ", "パルキア", "ゼクロム", "レシラム", "ゼルネアス", "イベルタル", "ソルガレオ", "ルナアーラ", "ザシアン", "ザマゼンタ", "コライドン", "ミライドン"];
+  var LEGEND_VERSION = 2; // 同じく、候補を増やしたら数字を上げる
+
+  // タブ（展示の区分）ごとに、空欄・候補・保存先を分ける
+  var CATS = [
+    // initialSlots: 最初に用意する空欄の数（なし＝候補の数に合わせて自動で増やす）
+    { key: "main", label: "ポケモン図鑑", prefix: "", defaults: DEFAULT_CANDIDATES, version: CAND_VERSION, replaceBelow: 3, file: "hakken-zukan", initialSlots: 24 },
+    { key: "legend", label: "レジェンドリサーチ", prefix: "legend:", defaults: LEGEND_CANDIDATES, version: LEGEND_VERSION, replaceBelow: 0, file: "hakken-zukan-legend" }
+  ];
+  function startSlots(cat, cands) { return cat.initialSlots || cands.length; }
+  function catDef(key) { return CATS.filter(function (c) { return c.key === key; })[0] || CATS[0]; }
+  var PHOTO_PREFIX = "photo:";
+  var dbPromise = null;
+
+  function openDb() {
+    if (dbPromise) return dbPromise;
+    dbPromise = new Promise(function (resolve, reject) {
+      var req = indexedDB.open(DB_NAME, 1);
+      req.onupgradeneeded = function () {
+        var db = req.result;
+        if (!db.objectStoreNames.contains(STORE)) db.createObjectStore(STORE, { keyPath: "key" });
+      };
+      req.onsuccess = function () { resolve(req.result); };
+      req.onerror = function () { reject(req.error); };
+    });
+    return dbPromise;
+  }
+  function idbGet(key) {
+    return openDb().then(function (db) {
+      return new Promise(function (resolve, reject) {
+        var req = db.transaction(STORE, "readonly").objectStore(STORE).get(key);
+        req.onsuccess = function () { resolve(req.result ? req.result.value : null); };
+        req.onerror = function () { reject(req.error); };
+      });
+    });
+  }
+  function idbSet(key, value) {
+    return openDb().then(function (db) {
+      return new Promise(function (resolve, reject) {
+        var tx = db.transaction(STORE, "readwrite");
+        tx.objectStore(STORE).put({ key: key, value: value });
+        tx.oncomplete = function () { resolve(true); };
+        tx.onerror = function () { reject(tx.error); };
+      });
+    });
+  }
+  function idbDelete(key) {
+    return openDb().then(function (db) {
+      return new Promise(function (resolve, reject) {
+        var tx = db.transaction(STORE, "readwrite");
+        tx.objectStore(STORE).delete(key);
+        tx.oncomplete = function () { resolve(true); };
+        tx.onerror = function () { reject(tx.error); };
+      });
+    });
+  }
+
+  function makeId() { return Math.random().toString(36).slice(2, 10); }
+  function uniq(list) {
+    var seen = {}, out = [];
+    list.forEach(function (x) { x = String(x).trim(); if (x && !seen[x]) { seen[x] = true; out.push(x); } });
+    return out;
+  }
+  function escapeHtml(str) {
+    return String(str).replace(/[&<>"']/g, function (c) {
+      return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c];
+    });
+  }
+  // ひらがな→カタカナ（検索用）
+  function toKata(s) {
+    return String(s).replace(/[ぁ-ゖ]/g, function (c) { return String.fromCharCode(c.charCodeAt(0) + 0x60); }).toLowerCase();
+  }
+  function pad(n) { return ("00" + n).slice(-3); }
+
+  // ---------- 画像 ----------
+  function resizeImage(file, maxSize, quality) {
+    maxSize = maxSize || 720; quality = quality || 0.75;
+    return new Promise(function (resolve, reject) {
+      var reader = new FileReader();
+      reader.onerror = function () { reject(new Error("read failed")); };
+      reader.onload = function () {
+        var img = new Image();
+        img.onerror = function () { reject(new Error("decode failed")); };
+        img.onload = function () {
+          var w = img.width, h = img.height;
+          if (w > h && w > maxSize) { h = Math.round(h * maxSize / w); w = maxSize; }
+          else if (h > maxSize) { w = Math.round(w * maxSize / h); h = maxSize; }
+          var c = document.createElement("canvas");
+          c.width = w; c.height = h;
+          c.getContext("2d").drawImage(img, 0, 0, w, h);
+          resolve(c.toDataURL("image/jpeg", quality));
+        };
+        img.src = reader.result;
+      };
+      reader.readAsDataURL(file);
+    });
+  }
+  function loadImage(src) {
+    return new Promise(function (resolve, reject) {
+      var img = new Image();
+      img.onload = function () { resolve(img); };
+      img.onerror = function () { reject(new Error("image load failed")); };
+      img.src = src;
+    });
+  }
+  function roundRectPath(ctx, x, y, w, h, r) {
+    ctx.beginPath();
+    ctx.moveTo(x + r, y);
+    ctx.arcTo(x + w, y, x + w, y + h, r);
+    ctx.arcTo(x + w, y + h, x, y + h, r);
+    ctx.arcTo(x, y + h, x, y, r);
+    ctx.arcTo(x, y, x + w, y, r);
+    ctx.closePath();
+  }
+
+  function buildMemoryImage(slots) {
+    var list = slots.filter(function (s) { return s.photo && s.names.length; });
+    var cols = list.length <= 8 ? 4 : list.length <= 36 ? 6 : 8;
+    var cell = 260, gap = 18, padding = 36, labelH = 40, titleH = 110;
+    var rows = Math.max(1, Math.ceil(list.length / cols));
+    var width = padding * 2 + cols * cell + (cols - 1) * gap;
+    var height = titleH + padding * 2 + rows * (cell + labelH) + (rows - 1) * gap;
+    var canvas = document.createElement("canvas");
+    // iPhoneのSafariは約1670万ピクセルを超えるcanvasを作れないので、超える場合は全体を縮小
+    var MAX_PIXELS = 14000000;
+    var scale = Math.min(1, Math.sqrt(MAX_PIXELS / (width * height)));
+    canvas.width = Math.floor(width * scale); canvas.height = Math.floor(height * scale);
+    var ctx = canvas.getContext("2d");
+    ctx.scale(scale, scale);
+
+    var grad = ctx.createLinearGradient(0, 0, 0, height);
+    grad.addColorStop(0, "#FFF8EA"); grad.addColorStop(1, "#FFE4D2");
+    ctx.fillStyle = grad; ctx.fillRect(0, 0, width, height);
+    ctx.fillStyle = "#E8484F"; ctx.fillRect(0, 0, width, titleH + 10);
+    ctx.fillStyle = "#23244A"; ctx.fillRect(0, titleH + 10, width, 6);
+
+    ctx.textBaseline = "top";
+    ctx.fillStyle = "#FFFFFF";
+    ctx.font = "40px 'Mochiy Pop One', sans-serif";
+    ctx.fillText(TITLE + (state.tab !== "main" ? "　" + curCat().label : ""), padding, 26);
+    ctx.fillStyle = "#FFE1DF";
+    ctx.font = "18px monospace";
+    var dateStr = new Date().toLocaleDateString("ja-JP", { year: "numeric", month: "long", day: "numeric" });
+    ctx.fillText(foundSpecies(slots) + " / " + state.candidates.length + " 種 はっけん ・ " + dateStr, padding, 78);
+
+    var i = 0;
+    function next() {
+      if (i >= list.length) return Promise.resolve(canvas);
+      var idx = i, col = idx % cols, row = Math.floor(idx / cols);
+      var x = padding + col * (cell + gap);
+      var y = titleH + padding + row * (cell + labelH + gap);
+      var item = list[idx];
+      i++;
+      function label() {
+        ctx.fillStyle = "#E8484F"; ctx.font = "bold 15px monospace";
+        ctx.fillText("No." + pad(item.no), x, y + cell + 10);
+        ctx.fillStyle = "#23244A"; ctx.font = "18px 'Mochiy Pop One', sans-serif";
+        var first = item.names[0];
+        var more = item.names.length > 1 ? " ほか" + (item.names.length - 1) + "匹" : "";
+        var room = 11 - more.length;
+        var name = (first.length > room ? first.slice(0, room - 1) + "…" : first) + more;
+        ctx.fillText(name, x + 72, y + cell + 8);
+      }
+      return loadImage(item.photo).then(function (img) {
+        var side = Math.min(img.width, img.height);
+        ctx.save(); roundRectPath(ctx, x, y, cell, cell, 16); ctx.clip();
+        ctx.drawImage(img, (img.width - side) / 2, (img.height - side) / 2, side, side, x, y, cell, cell);
+        ctx.restore();
+        ctx.lineWidth = 4; ctx.strokeStyle = "#23244A"; roundRectPath(ctx, x, y, cell, cell, 16); ctx.stroke();
+        label(); return next();
+      }).catch(function () { label(); return next(); });
+    }
+    return next();
+  }
+
+  // ---------- アイコン ----------
+  function svgIcon(paths, size) {
+    size = size || 15;
+    return '<svg class="icon-svg" width="' + size + '" height="' + size + '" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">' + paths + '</svg>';
+  }
+  var ICON_DOWNLOAD = svgIcon('<path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/>', 15);
+  var ICON_REFRESH = svgIcon('<polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/>', 15);
+  var ICON_RESET = svgIcon('<path d="M3 2v6h6"/><path d="M3.51 15a9 9 0 1 0 2.13-9.36L3 8"/>', 15);
+  var ICON_PLUS = svgIcon('<line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>', 22);
+  var ICON_IMAGE = svgIcon('<rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="9" cy="9" r="2"/><path d="M21 15l-5-5L5 21"/>', 22);
+  var ICON_X = svgIcon('<line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>', 18);
+  var ICON_SEARCH = svgIcon('<circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>', 16);
+  var ICON_SPARKLES = svgIcon('<path d="M12 3l1.9 5.1L19 10l-5.1 1.9L12 17l-1.9-5.1L5 10l5.1-1.9Z"/>', 30);
+
+  function stampSvg() {
+    return '<div class="stamp-mark"><svg viewBox="0 0 100 100" width="62" height="62">' +
+      '<circle cx="50" cy="50" r="44" fill="#FFF8EA" stroke="#E8484F" stroke-width="4"/>' +
+      '<circle cx="50" cy="50" r="37" fill="none" stroke="#E8484F" stroke-width="1.5" stroke-dasharray="3 3"/>' +
+      '<path d="M50 20l4.5 9.5 10.5 1.5-7.6 7.3 1.8 10.4L50 43.8l-9.2 4.9 1.8-10.4-7.6-7.3 10.5-1.5z" fill="#FFCB3D" stroke="#23244A" stroke-width="1.5" stroke-linejoin="round"/>' +
+      '<text x="50" y="70" text-anchor="middle" font-family="Mochiy Pop One, sans-serif" font-size="12" fill="#E8484F">はっけん</text>' +
+      '</svg></div>';
+  }
+
+  // ---------- 状態 ----------
+  var state = {
+    loaded: false,
+    tab: "main",
+    cats: {},         // key -> { slots:[{id, names:[...], photo, foundAt}], candidates:[...] }
+    sortMode: "no",
+    exporting: false,
+    modal: null       // {type:'entry', id, photo, names, query} | {type:'confirm', ...} | {type:'cands'} | {type:'export', ...}
+  };
+  // state.slots / state.candidates は「今開いているタブ」のデータを指す
+  Object.defineProperty(state, "slots", {
+    get: function () { return state.cats[state.tab].slots; },
+    set: function (v) { state.cats[state.tab].slots = v; }
+  });
+  Object.defineProperty(state, "candidates", {
+    get: function () { return state.cats[state.tab].candidates; },
+    set: function (v) { state.cats[state.tab].candidates = v; }
+  });
+  function curCat() { return catDef(state.tab); }
+  var noticeClosed = false;
+  try { noticeClosed = localStorage.getItem("hakken-zukan-notice") === "1"; } catch (e) {}
+  try { var savedTab = localStorage.getItem("hakken-zukan-tab"); if (savedTab && catDef(savedTab).key === savedTab) state.tab = savedTab; } catch (e) {}
+
+  function persistSlotsFor(cat, slots) {
+    var stripped = slots.map(function (s) { return { id: s.id, names: s.names || [] }; });
+    return idbSet(cat.prefix + "slots", JSON.stringify(stripped)).catch(function (e) { console.error("保存に失敗しました", e); });
+  }
+  function persistCandidatesFor(cat, cands) {
+    idbSet(cat.prefix + "candidatesVersion", cat.version).catch(function () {});
+    return idbSet(cat.prefix + "candidates", JSON.stringify(cands)).catch(function (e) { console.error(e); });
+  }
+  function persistSlots() { return persistSlotsFor(curCat(), state.slots); }
+  function persistCandidates() { return persistCandidatesFor(curCat(), state.candidates); }
+  function savePhoto(id, photo, foundAt) {
+    if (!photo) return idbDelete(PHOTO_PREFIX + id).catch(function () {});
+    return idbSet(PHOTO_PREFIX + id, JSON.stringify({ photo: photo, foundAt: foundAt })).catch(function (e) { console.error("写真の保存に失敗しました", e); });
+  }
+  // 空欄の数が候補の種類数より少なければ、足りない分を追加（減らすことはしない）
+  function ensureSlots() {
+    if (curCat().initialSlots) return; // 空欄を自分で増やすタブでは自動で足さない
+    var need = state.candidates.length - state.slots.length;
+    if (need > 0) { state.slots = state.slots.concat(freshSlots(need)); persistSlots(); }
+  }
+  // 候補にあるポケモンのうち、写真と名前がそろって登録済みの種類数
+  function foundSpecies(list, cands) {
+    var done = {};
+    list.forEach(function (s) { if (s.photo) s.names.forEach(function (n) { done[n] = true; }); });
+    return (cands || state.candidates).filter(function (c) { return done[c]; }).length;
+  }
+  function freshSlots(n) {
+    var out = [];
+    for (var i = 0; i < n; i++) out.push({ id: makeId(), names: [], photo: null, foundAt: null });
+    return out;
+  }
+  // 保存データの名前を配列に（以前の1匹だけの形式にも対応）
+  function namesOf(m) {
+    if (Array.isArray(m.names)) return m.names.filter(Boolean);
+    return m.name ? [m.name] : [];
+  }
+  function labelOf(s) { return s.names.join("・"); }
+
+  // 一覧の写真は Blob URL にして表示（大きな data URL を毎回HTMLに埋め込むと重くなるため）
+  var thumbCache = {};
+  function thumbSrc(s) {
+    var c = thumbCache[s.id];
+    if (c && c.photo === s.photo) return c.url;
+    if (c) URL.revokeObjectURL(c.url);
+    try {
+      var parts = s.photo.split(",");
+      var mime = (parts[0].match(/data:([^;]+)/) || [])[1] || "image/jpeg";
+      var bin = atob(parts[1]);
+      var arr = new Uint8Array(bin.length);
+      for (var i = 0; i < bin.length; i++) arr[i] = bin.charCodeAt(i);
+      var url = URL.createObjectURL(new Blob([arr], { type: mime }));
+      thumbCache[s.id] = { photo: s.photo, url: url };
+      return url;
+    } catch (e) {
+      return s.photo;
+    }
+  }
+
+  // 1つのタブ分のデータを読み込む
+  function loadCat(cat) {
+    return Promise.all([idbGet(cat.prefix + "slots"), idbGet(cat.prefix + "candidates"), idbGet(cat.prefix + "candidatesVersion")]).then(function (res) {
+      var meta = null, cands = null;
+      try { var p = JSON.parse(res[0]); if (Array.isArray(p)) meta = p; } catch (e) {}
+      try { var c = JSON.parse(res[1]); if (Array.isArray(c) && c.length) cands = c; } catch (e) {}
+      var savedVer = Number(res[2]) || 1;
+      var upgraded = !!(cands && savedVer < cat.version);
+      if (upgraded) {
+        // 旧候補（ねがおリスト）は置き換え、それ以外は新しく増えた候補を後ろに追加
+        cands = savedVer < cat.replaceBelow ? uniq(cat.defaults) : uniq(cands.concat(cat.defaults));
+        persistCandidatesFor(cat, cands);
+      }
+      if (!cands) { cands = uniq(cat.defaults); persistCandidatesFor(cat, cands); }
+      if (!meta) {
+        var fresh = freshSlots(startSlots(cat, cands));
+        persistSlotsFor(cat, fresh);
+        if (cat.initialSlots) idbSet(cat.prefix + "slotLayout", 2).catch(function () {});
+        return { slots: fresh, candidates: cands };
+      }
+      return Promise.all(meta.map(function (m) {
+        return idbGet(PHOTO_PREFIX + m.id).then(function (v) {
+          var pv = null; try { pv = v ? JSON.parse(v) : null; } catch (e) {}
+          return { id: m.id, names: namesOf(m), photo: pv ? pv.photo : null, foundAt: pv ? pv.foundAt : null };
+        }).catch(function () { return { id: m.id, names: namesOf(m), photo: null, foundAt: null }; });
+      })).then(function (slots) {
+        // 候補が増えたときだけ、足りない空欄を追加（自分で削除した枠は勝手に戻さない）
+        if (cat.initialSlots) {
+          // 以前の版で候補の数まで増えた空欄を、最初の数に戻す（写真や名前が入っている枠は消さない）
+          return idbGet(cat.prefix + "slotLayout").then(function (lay) {
+            if (lay !== 2) {
+              var cut = slots.length;
+              while (cut > cat.initialSlots && !slots[cut - 1].photo && !slots[cut - 1].names.length) cut--;
+              if (cut < slots.length) { slots = slots.slice(0, cut); persistSlotsFor(cat, slots); }
+              idbSet(cat.prefix + "slotLayout", 2).catch(function () {});
+            }
+            return { slots: slots, candidates: cands };
+          }).catch(function () { return { slots: slots, candidates: cands }; });
+        }
+        var need = cands.length - slots.length;
+        if (!cat.initialSlots && upgraded && need > 0) { slots = slots.concat(freshSlots(need)); persistSlotsFor(cat, slots); }
+        return { slots: slots, candidates: cands };
+      });
+    }).catch(function (e) {
+      console.error(e);
+      var cands = uniq(cat.defaults);
+      return { slots: freshSlots(startSlots(cat, cands)), candidates: cands };
+    });
+  }
+
+  function init() {
+    Promise.all(CATS.map(loadCat)).then(function (results) {
+      CATS.forEach(function (cat, i) { state.cats[cat.key] = results[i]; });
+      state.loaded = true; render();
+    });
+  }
+
+  function switchTab(key) {
+    if (state.tab === key) return;
+    state.tab = key;
+    try { localStorage.setItem("hakken-zukan-tab", key); } catch (e) {}
+    render();
+    window.scrollTo(0, 0);
+  }
+
+  function numbered() {
+    return state.slots.map(function (s, i) { return Object.assign({ no: i + 1 }, s); });
+  }
+  function isDone(s) { return !!(s.photo && s.names.length); }
+
+  // ---------- 操作 ----------
+  function openEntry(id) {
+    var s = state.slots.filter(function (x) { return x.id === id; })[0];
+    if (!s) return;
+    state.modal = { type: "entry", id: id, photo: s.photo, names: s.names.slice(), query: "" };
+    renderModal();
+  }
+  function saveEntry() {
+    var m = state.modal;
+    state.slots = state.slots.map(function (s) {
+      if (s.id !== m.id) return s;
+      var photoChanged = s.photo !== m.photo;
+      var foundAt = m.photo ? (photoChanged ? new Date().toISOString() : s.foundAt) : null;
+      if (photoChanged) savePhoto(s.id, m.photo, foundAt);
+      return Object.assign({}, s, { names: m.names.slice(), photo: m.photo, foundAt: foundAt });
+    });
+    persistSlots();
+    closeModal();
+    render();
+  }
+  function clearSlot(id) {
+    state.slots = state.slots.map(function (s) { return s.id === id ? Object.assign({}, s, { names: [], photo: null, foundAt: null }) : s; });
+    savePhoto(id, null); persistSlots();
+    closeModal(); render();
+  }
+  function removeSlot(id) {
+    state.slots = state.slots.filter(function (s) { return s.id !== id; });
+    savePhoto(id, null); persistSlots();
+    closeModal(); render();
+  }
+  function addSlot() {
+    state.slots = state.slots.concat(freshSlots(1));
+    persistSlots(); render();
+    var last = state.slots[state.slots.length - 1];
+    openEntry(last.id);
+  }
+  function resetAll() {
+    state.slots.forEach(function (s) { if (s.photo) savePhoto(s.id, null); });
+    state.slots = state.slots.map(function (s) { return Object.assign({}, s, { names: [], photo: null, foundAt: null }); });
+    persistSlots(); closeModal(); render();
+  }
+  function initializeAll() {
+    state.slots.forEach(function (s) { if (s.photo) savePhoto(s.id, null); });
+    state.candidates = uniq(curCat().defaults);
+    state.slots = freshSlots(startSlots(curCat(), state.candidates));
+    persistSlots(); persistCandidates(); closeModal(); render();
+  }
+  function entryDirty(m) {
+    var s = state.slots.filter(function (x) { return x.id === m.id; })[0];
+    if (!s) return false;
+    return s.photo !== m.photo || s.names.join("\n") !== m.names.join("\n");
+  }
+  function closeModal() {
+    if (state.modal && state.modal.type === "export" && state.modal.url) URL.revokeObjectURL(state.modal.url);
+    state.modal = null; renderModal();
+  }
+
+  function canShareFile(file) {
+    try { return !!(navigator.canShare && navigator.share && navigator.canShare({ files: [file] })); }
+    catch (e) { return false; }
+  }
+  function handleDownload() {
+    if (state.exporting) return;
+    var list = numbered();
+    if (!list.some(isDone)) { alert("まだ1枠も埋まっていません。写真と名前を入れてから保存してください。"); return; }
+    state.exporting = true; render();
+    buildMemoryImage(list).then(function (canvas) {
+      // 写真アプリで扱いやすく、ファイルも小さいJPEGで書き出す
+      return new Promise(function (resolve, reject) {
+        canvas.toBlob(function (b) { b ? resolve(b) : reject(new Error("toBlob failed")); }, "image/jpeg", 0.9);
+      });
+    }).then(function (blob) {
+      var file = null;
+      try { file = new File([blob], curCat().file + ".jpg", { type: "image/jpeg" }); } catch (e) {}
+      // 作った画像をプレビュー表示。保存はボタンのタップ（または長押し）で行う
+      var url = URL.createObjectURL(blob);
+      return new Promise(function (resolve) {
+        var fr = new FileReader();
+        fr.onload = function () { resolve(fr.result); };
+        fr.onerror = function () { resolve(url); };
+        fr.readAsDataURL(blob);
+      }).then(function (previewSrc) {
+        state.modal = { type: "export", blob: blob, file: file, url: url, preview: previewSrc };
+        renderModal();
+      });
+    }).catch(function (e) {
+      console.error(e); alert("画像の書き出しに失敗しました。もう一度お試しください。");
+    }).finally(function () { state.exporting = false; render(); });
+  }
+  function saveExport(m) {
+    // iPhone・Androidでは共有シートから「画像を保存」で写真アプリに保存できる
+    if (m.file && canShareFile(m.file)) {
+      navigator.share({ files: [m.file], title: TITLE }).catch(function (e) {
+        if (e && e.name === "AbortError") return; // キャンセルは何もしない
+        console.error(e);
+        alert("共有シートを開けませんでした。画像を長押しして保存してください。");
+      });
+      return;
+    }
+    var a = document.createElement("a");
+    a.href = m.url; a.download = curCat().file + ".jpg";
+    document.body.appendChild(a); a.click(); a.remove();
+  }
+
+
+  // ---------- 描画（メイン） ----------
+  function render() {
+    var app = document.getElementById("app");
+    if (!state.loaded) { app.innerHTML = '<div style="padding:40px;">読み込み中…</div>'; return; }
+
+    var list = numbered();
+    var total = list.length;
+    var filled = list.filter(isDone).length;
+    var species = foundSpecies(list);
+    var kinds = state.candidates.length;
+    var complete = kinds > 0 && species === kinds;
+    if (state.sortMode === "kana") {
+      list = list.slice().sort(function (a, b) {
+        var an = a.names[0], bn = b.names[0];
+        if (!an && !bn) return a.no - b.no;
+        if (!an) return 1; if (!bn) return -1;
+        return an.localeCompare(bn, "ja") || a.no - b.no;
+      });
+    } else if (state.sortMode === "empty") {
+      list = list.slice().sort(function (a, b) { return (isDone(a) - isDone(b)) || a.no - b.no; });
+    }
+
+    var h = "";
+    h += '<div class="dex-top"><header class="rally-header">';
+    h += '<div class="rally-header-top">';
+    h += '  <p class="eyebrow"><span class="lamp"></span> DISCOVERY LOG</p>';
+    h += '  <div class="header-actions">';
+    h += '    <button class="btn-pill print-btn" id="btn-download" ' + (state.exporting ? "disabled" : "") + '><span class="icon">' + ICON_DOWNLOAD + '</span>' + (state.exporting ? "書き出し中…" : "画像で保存") + '</button>';
+    h += '    <button class="btn-pill ghost-btn" id="btn-init"><span class="icon">' + ICON_REFRESH + '</span>初期化</button>';
+    h += '    <button class="btn-pill ghost-btn" id="btn-reset"><span class="icon">' + ICON_RESET + '</span>リセット</button>';
+    h += '  </div>';
+    h += '</div>';
+    h += '<h1 class="title">' + escapeHtml(TITLE) + '</h1>';
+    h += '<p class="title-sub">「' + escapeHtml(EVENT_NAME) + '」を回るときに使える、ファンが作った非公式の記録ツールです。</p>';
+    h += '<div class="progress-row">';
+    h += '  <div class="progress-badge"><span class="progress-num">' + species + '</span><span class="progress-slash">/</span><span class="progress-den">' + kinds + '</span></div>';
+    h += '  <div class="progress-bar-track"><div class="progress-bar-fill" style="width:' + (kinds ? species / kinds * 100 : 0) + '%"></div></div>';
+    h += '</div>';
+    h += '<p class="progress-sub">登録した写真 <b>' + filled + '</b> 枚 / 空欄 <b>' + total + '</b> 枠' + (curCat().initialSlots ? '（足りなくなったら一番下の「空欄を追加」で増やせます）' : '') + '</p>';
+    h += '</header></div>';
+
+    if (!noticeClosed) {
+      h += '<div class="notice" role="note"><b>このサイトはファンが個人で作った非公式ツールです。</b>公式とは関係ありません。ご理解のうえで、イベントを楽しんでください！（くわしくはページの一番下）';
+      h += '<button class="notice-close" id="btn-notice" aria-label="閉じる">' + ICON_X + '</button></div>';
+    }
+
+    if (complete) {
+      h += '<div class="complete-banner"><div class="complete-seal icon">' + ICON_SPARKLES + '</div><div><p class="complete-title">コンプリート!</p><p class="complete-sub">候補のポケモンを全種類はっけんしました。おつかれさまでした。</p></div></div>';
+    }
+
+    h += '<div class="tabs" role="tablist">';
+    CATS.forEach(function (cat) {
+      var d = state.cats[cat.key];
+      var f = foundSpecies(d.slots, d.candidates);
+      h += '<button class="tab' + (state.tab === cat.key ? " active" : "") + '" role="tab" data-tab="' + cat.key + '">' + escapeHtml(cat.label) + '<small>' + f + ' / ' + d.candidates.length + '</small></button>';
+    });
+    h += '</div>';
+
+    h += '<div class="sort-row"><div class="sort-left"><span class="sort-label">並び替え</span><div class="sort-buttons">';
+    [["no", "番号順"], ["kana", "五十音順"], ["empty", "空欄を先に"]].forEach(function (o) {
+      h += '<button class="sort-btn ' + (state.sortMode === o[0] ? "sort-btn-active" : "") + '" data-sort="' + o[0] + '">' + o[1] + '</button>';
+    });
+    h += '</div></div><button class="text-btn" id="btn-cands">候補を編集</button></div>';
+
+    h += '<div class="grid">';
+    list.forEach(function (s) {
+      h += '<div class="card">';
+      h += '<div class="card-square">';
+      var has = s.names.length > 0;
+      h += '<span class="tile-no">No.' + pad(s.no) + '</span>';
+      if (s.names.length > 1) h += '<span class="tile-count">' + s.names.length + '匹</span>';
+      if (s.photo) {
+        h += '<button class="tile tile-filled" data-open="' + s.id + '"><img class="tile-photo" src="' + thumbSrc(s) + '" alt="' + escapeHtml(labelOf(s)) + '" />';
+        if (!has) h += '<span class="tile-need">名前をえらぶ</span>';
+        h += '</button>';
+        if (has) h += stampSvg();
+      } else if (has) {
+        h += '<button class="tile tile-partial" data-open="' + s.id + '"><span class="tile-empty-inner"><span class="icon">' + ICON_IMAGE + '</span><span class="tile-empty-hint">写真をいれる</span></span></button>';
+      } else {
+        h += '<button class="tile tile-empty" data-open="' + s.id + '"><span class="tile-empty-inner"><span class="tile-q">？</span><span class="tile-empty-hint">タップして登録</span></span></button>';
+      }
+      h += '</div>';
+      h += has
+        ? '<div class="card-label"><span>' + escapeHtml(labelOf(s)) + '</span></div>'
+        : '<div class="card-label unknown"><span>？？？？？</span></div>';
+      h += '</div>';
+    });
+    h += '<div class="card"><div class="card-square"><button class="tile tile-empty add-tile" id="btn-add"><span class="tile-empty-inner"><span class="icon">' + ICON_PLUS + '</span><span class="tile-empty-hint">空欄を追加</span></span></button></div><div class="card-label"></div></div>';
+    h += '</div>';
+
+    h += '<footer class="site-footer">';
+    h += '<h2>このサイトについて</h2>';
+    h += '<p>「' + escapeHtml(TITLE) + '」は、ファンが個人で作った<b>非公式のツール</b>です。イベントの主催者（三井不動産・株式会社ポケモン・JR東海）や任天堂など、公式の団体とは一切関係ありません。このサイトについて公式へのお問い合わせはしないでください。</p>';
+    h += '<p>候補の名前などに誤りがあったり、予告なく内容の変更や公開の終了をしたりすることがあります。登録した写真や名前は、お使いの端末のブラウザの中だけに保存されます（ほかの人には見えません）。ブラウザのデータを消すと、登録内容も消えます。</p>';
+    h += '<p>これらの点をご理解いただいたうえで、ご利用ください。</p>';
+    h += '<p>イベントの開催期間・場所などの詳しい情報は、<a href="' + EVENT_URL + '" target="_blank" rel="noopener">公式サイト</a>をご確認ください。</p>';
+    h += '<p>バグや不具合を見つけたときは、X（旧Twitter）の <a href="https://x.com/michiru_poke" target="_blank" rel="noopener">@michiru_poke</a> までお知らせください。</p>';
+    h += '<p class="enjoy">イベントのおともに、気軽に楽しんでもらえたらうれしいです！</p>';
+    h += '</footer>';
+
+    app.innerHTML = h;
+
+    document.getElementById("btn-download").onclick = handleDownload;
+    var nb = document.getElementById("btn-notice");
+    if (nb) nb.onclick = function () {
+      noticeClosed = true;
+      try { localStorage.setItem("hakken-zukan-notice", "1"); } catch (e) {}
+      render();
+    };
+    document.getElementById("btn-add").onclick = addSlot;
+    document.getElementById("btn-cands").onclick = function () { state.modal = { type: "cands" }; renderModal(); };
+    document.getElementById("btn-reset").onclick = function () {
+      state.modal = { type: "confirm", title: "「" + curCat().label + "」をリセットしますか？", body: "このタブの空欄の数と候補は残りますが、写真と名前はすべて消えます。ほかのタブはそのままです。", ok: "リセットする", action: resetAll };
+      renderModal();
+    };
+    document.getElementById("btn-init").onclick = function () {
+      state.modal = { type: "confirm", title: "「" + curCat().label + "」を最初の状態に戻しますか？", body: "このタブの空欄の数（" + startSlots(curCat(), uniq(curCat().defaults)) + "枠）・候補リスト・写真と名前がすべて初期状態に戻ります。ほかのタブはそのままです。元には戻せません。", ok: "初期化する", action: initializeAll };
+      renderModal();
+    };
+    app.querySelectorAll("[data-open]").forEach(function (el) {
+      el.onclick = function () { openEntry(el.getAttribute("data-open")); };
+    });
+    app.querySelectorAll("[data-tab]").forEach(function (el) {
+      el.onclick = function () { switchTab(el.getAttribute("data-tab")); };
+    });
+    app.querySelectorAll("[data-sort]").forEach(function (el) {
+      el.onclick = function () { state.sortMode = el.getAttribute("data-sort"); render(); };
+    });
+  }
+
+  // ---------- 描画（モーダル） ----------
+  function renderModal() {
+    var root = document.getElementById("modal-root");
+    var m = state.modal;
+    document.body.style.overflow = m ? "hidden" : "";
+    if (!m) { root.innerHTML = ""; return; }
+
+    var h = '<div class="modal-backdrop" id="backdrop">';
+    if (m.type === "confirm") {
+      h += '<div class="modal small"><p class="modal-title" style="margin-bottom:8px">' + escapeHtml(m.title) + '</p>';
+      h += '<p class="modal-body">' + escapeHtml(m.body) + '</p>';
+      h += '<div class="modal-actions"><button class="btn-cancel" id="m-cancel">やめる</button><button class="btn-primary" id="m-ok">' + escapeHtml(m.ok) + '</button></div></div>';
+    } else if (m.type === "export") {
+      var share = m.file && canShareFile(m.file);
+      h += '<div class="modal"><div class="modal-head"><p class="modal-title">画像ができました</p><button class="modal-close" id="m-cancel">' + ICON_X + '</button></div>';
+      h += '<div class="export-preview"><img src="' + m.preview + '" alt="はっけん！ポケモン図鑑のまとめ画像" /></div>';
+      h += '<p class="export-hint">' + (share
+        ? '「保存する」を押して、出てきたメニューの<b>「画像を保存」</b>を選ぶと写真アプリに保存されます。<br>または、上の画像を<b>長押し</b>して<b>「"写真"に追加」</b>でも保存できます。'
+        : '「ダウンロード」で保存できます。スマホでは、上の画像を<b>長押し</b>して<b>「"写真"に追加」</b>（Androidは「画像をダウンロード」）でも保存できます。') + '</p>';
+      h += '<div class="modal-actions"><button class="btn-cancel" id="m-cancel2">とじる</button><button class="btn-primary" id="m-ok">' + (share ? "保存する" : "ダウンロード") + '</button></div></div>';
+    } else if (m.type === "cands") {
+      h += '<div class="modal"><div class="modal-head"><p class="modal-title">名前の候補を編集</p><button class="modal-close" id="m-cancel">' + ICON_X + '</button></div>';
+      h += '<p class="modal-body" style="margin-bottom:8px">1行に1つずつ書いてください。重複は自動でまとめます。</p>';
+      h += '<textarea class="cand-textarea" id="m-cands">' + escapeHtml(state.candidates.join("\n")) + '</textarea>';
+      h += '<div class="modal-actions"><button class="btn-danger" id="m-default">最初の候補に戻す</button><button class="btn-cancel" id="m-cancel2">やめる</button><button class="btn-primary" id="m-ok">保存</button></div></div>';
+    } else if (m.type === "entry") {
+      var idx = state.slots.map(function (s) { return s.id; }).indexOf(m.id);
+      var current = state.slots[idx] || {};
+      var hasAny = current.photo || (current.names && current.names.length);
+      h += '<div class="modal">';
+      h += '<div class="modal-head"><p class="modal-title"><span class="modal-no">No.' + pad(idx + 1) + '</span>' + (hasAny ? "登録を編集" : "はっけん登録") + '</p><button class="modal-close" id="m-cancel">' + ICON_X + '</button></div>';
+      h += '<p class="step-label"><span class="step-num ' + (m.photo ? "done" : "") + '">1</span>写真を添付</p>';
+      h += '<label class="photo-pick ' + (m.photo ? "has" : "") + '" for="m-file">';
+      h += m.photo ? '<img class="photo-thumb" src="' + m.photo + '" alt="" />' : '<span class="photo-thumb">' + ICON_IMAGE + '</span>';
+      h += '<span class="photo-pick-text">' + (m.photo ? "写真を変更する" : "タップして写真をえらぶ") + '<small>' + (m.photo ? "タップで選び直し" : "カメラロールから選べます") + '</small></span>';
+      h += '<input type="file" accept="image/*" id="m-file" class="hidden-input" /></label>';
+      h += '<p class="step-label"><span class="step-num ' + (m.names.length ? "done" : "") + '">2</span>写っているポケモンを候補からえらぶ（何匹でもOK）</p>';
+      h += '<div class="search-wrap"><span class="search-icon">' + ICON_SEARCH + '</span><input class="search-input" id="m-search" placeholder="名前でさがす（ひらがなOK）" value="' + escapeHtml(m.query) + '" autocomplete="off" /></div>';
+      h += '<div class="sel-chips" id="m-selected"></div>';
+      h += '<div class="cand-list" id="m-list"></div>';
+      h += '<div class="modal-actions">';
+      if (hasAny) h += '<button class="btn-danger" id="m-clear">空欄にもどす</button>';
+      else h += '<button class="btn-danger" id="m-remove">この枠を削除</button>';
+      h += '<button class="btn-primary" id="m-ok">登録する</button></div>';
+      h += '</div>';
+    }
+    h += '</div>';
+    root.innerHTML = h;
+
+    var backdrop = document.getElementById("backdrop");
+    backdrop.onclick = function (e) {
+      if (e.target !== backdrop) return;
+      if (m.type === "entry" && entryDirty(m) && !confirm("登録せずに閉じますか？（えらんだ内容は消えます）")) return;
+      closeModal();
+    };
+    ["m-cancel", "m-cancel2"].forEach(function (id) { var el = document.getElementById(id); if (el) el.onclick = closeModal; });
+
+    if (m.type === "confirm") {
+      document.getElementById("m-ok").onclick = m.action;
+    } else if (m.type === "export") {
+      document.getElementById("m-ok").onclick = function () { saveExport(m); };
+    } else if (m.type === "cands") {
+      document.getElementById("m-ok").onclick = function () {
+        var next = uniq(document.getElementById("m-cands").value.split(/\r?\n/));
+        if (!next.length) { alert("候補を1つ以上入力してください。"); return; }
+        state.candidates = next; persistCandidates(); ensureSlots(); closeModal(); render();
+      };
+      document.getElementById("m-default").onclick = function () {
+        document.getElementById("m-cands").value = uniq(curCat().defaults).join("\n");
+      };
+    } else if (m.type === "entry") {
+      document.getElementById("m-file").onchange = function (e) {
+        var f = e.target.files[0];
+        e.target.value = "";
+        if (!f) return;
+        resizeImage(f).then(function (url) { m.photo = url; renderModal(); })
+          .catch(function () { alert("写真を読み込めませんでした。別の写真でお試しください。"); });
+      };
+      var search = document.getElementById("m-search");
+      search.oninput = function () { m.query = search.value; renderCandList(); };
+      document.getElementById("m-ok").onclick = saveEntry;
+      var clr = document.getElementById("m-clear"); if (clr) clr.onclick = function () { clearSlot(m.id); };
+      var rm = document.getElementById("m-remove"); if (rm) rm.onclick = function () { removeSlot(m.id); };
+      renderCandList();
+    }
+  }
+
+  function renderCandList() {
+    var m = state.modal;
+    var listEl = document.getElementById("m-list");
+    var selEl = document.getElementById("m-selected");
+    var okBtn = document.getElementById("m-ok");
+    if (!listEl) return;
+
+    var used = {};
+    state.slots.forEach(function (s) { if (s.id !== m.id) s.names.forEach(function (n) { used[n] = true; }); });
+    var q = toKata(m.query.trim());
+    var hits = state.candidates.filter(function (c) { return !q || toKata(c).indexOf(q) !== -1; });
+
+    var h = "";
+    hits.forEach(function (c) {
+      var cls = "cand" + (used[c] ? " used" : "") + (m.names.indexOf(c) !== -1 ? " active" : "");
+      h += '<button class="' + cls + '" data-cand="' + escapeHtml(c) + '">' + escapeHtml(c) + '</button>';
+    });
+    var raw = m.query.trim();
+    if (raw && state.candidates.indexOf(raw) === -1) {
+      h += '<button class="cand custom' + (m.names.indexOf(raw) !== -1 ? " active" : "") + '" data-cand="' + escapeHtml(raw) + '">＋「' + escapeHtml(raw) + '」を追加</button>';
+    }
+    if (!hits.length && !raw) h += '<p class="cand-empty">候補がありません。</p>';
+    else if (!hits.length) h += '<p class="cand-empty" style="width:100%">候補に見つかりませんでした。</p>';
+    listEl.innerHTML = h;
+
+    selEl.innerHTML = m.names.length
+      ? m.names.map(function (n) { return '<button class="sel-chip" data-unsel="' + escapeHtml(n) + '">' + escapeHtml(n) + '<span class="x">×</span></button>'; }).join("")
+      : '<span class="sel-empty">まだえらんでいません（タップでえらぶ・もう一度タップで外す）</span>';
+    okBtn.disabled = !(m.photo || m.names.length);
+    okBtn.textContent = (m.photo && m.names.length) ? "登録する" + (m.names.length > 1 ? "（" + m.names.length + "匹）" : "") : "途中まで保存";
+
+    function toggle(v) {
+      var i = m.names.indexOf(v);
+      if (i === -1) {
+        m.names.push(v);
+        // 続けて次のポケモンを探せるように検索欄を空にする
+        if (m.query) { m.query = ""; var se = document.getElementById("m-search"); if (se) se.value = ""; }
+      } else {
+        m.names.splice(i, 1);
+      }
+      var steps = document.querySelectorAll(".step-num");
+      if (steps[1]) steps[1].classList.toggle("done", m.names.length > 0);
+      renderCandList();
+    }
+    listEl.querySelectorAll("[data-cand]").forEach(function (el) {
+      el.onclick = function () { toggle(el.getAttribute("data-cand")); };
+    });
+    selEl.querySelectorAll("[data-unsel]").forEach(function (el) {
+      el.onclick = function () { toggle(el.getAttribute("data-unsel")); };
+    });
+  }
+
+  init();
+})();
+</script>
+</body>
+</html>
