@@ -887,7 +887,7 @@ svg.icon-svg { display: block; }
   function handleDownload() {
     if (state.exporting) return;
     var list = numbered();
-    if (!list.some(isDone)) { alert("まだ1枠も埋まっていません。写真と名前を入れてから保存してください。"); return; }
+    if (!list.some(isDone)) { alert("まだ登録された写真がありません。\n写真と名前を1枠以上登録してから、保存してください。"); return; }
     state.exporting = true; render();
     buildMemoryImage(list).then(function (canvas) {
       // 写真アプリで扱いやすく、ファイルも小さいJPEGで書き出す
@@ -1326,11 +1326,11 @@ svg.icon-svg { display: block; }
       h += '<div class="modal-actions"><button class="btn-cancel" id="m-cancel">やめる</button><button class="btn-primary" id="m-ok">' + escapeHtml(m.ok) + '</button></div></div>';
     } else if (m.type === "export") {
       var share = m.file && canShareFile(m.file);
-      h += '<div class="modal"><div class="modal-head"><p class="modal-title">画像ができました</p><button class="modal-close" id="m-cancel">' + ICON_X + '</button></div>';
+      h += '<div class="modal"><div class="modal-head"><p class="modal-title">画像を作成しました</p><button class="modal-close" id="m-cancel">' + ICON_X + '</button></div>';
       h += '<div class="export-preview"><img src="' + m.preview + '" alt="はっけん！ポケモン図鑑のまとめ画像" /></div>';
       h += '<p class="export-hint">' + (share
-        ? '「保存する」を押して、出てきたメニューの<b>「画像を保存」</b>を選ぶと写真アプリに保存されます。<br>または、上の画像を<b>長押し</b>して<b>「"写真"に追加」</b>でも保存できます。'
-        : '「ダウンロード」で保存できます。スマホでは、上の画像を<b>長押し</b>して<b>「"写真"に追加」</b>（Androidは「画像をダウンロード」）でも保存できます。') + '</p>';
+        ? '下の「保存する」を押し、表示されたメニューから<b>「画像を保存」</b>を選んでください。<br>うまく保存できない場合は、上の画像を<b>長押し</b>して保存することもできます。'
+        : '下の「ダウンロード」を押すと保存できます。<br>うまく保存できない場合は、上の画像を<b>長押し</b>して保存することもできます。') + '</p>';
       h += '<div class="modal-actions"><button class="btn-cancel" id="m-cancel2">とじる</button><button class="btn-primary" id="m-ok">' + (share ? "保存する" : "ダウンロード") + '</button></div></div>';
     } else if (m.type === "updates") {
       h += '<div class="modal"><div class="modal-head"><p class="modal-title">更新のお知らせ</p><button class="modal-close" id="m-cancel">' + ICON_X + '</button></div>';
