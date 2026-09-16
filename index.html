@@ -311,6 +311,12 @@ button { font-family: inherit; touch-action: manipulation; -webkit-tap-highlight
 .update-text b { font-size: 13px; }
 .update-more { background: #fff; color: var(--navy); border: none; border-radius: 999px; padding: 6px 12px; font-size: 12px; font-weight: 700; cursor: pointer; flex-shrink: 0; }
 .update-banner .notice-close { position: static; color: #C9CAE8; }
+.help-body { overflow-y: auto; -webkit-overflow-scrolling: touch; margin-bottom: 14px; }
+.help-sec { background: #fff; border: 1px solid var(--line); border-radius: 12px; padding: 10px 14px; margin-bottom: 10px; }
+.help-sec h3 { margin: 0 0 4px; font-family: 'Mochiy Pop One', sans-serif; font-weight: 400; font-size: 14px; color: var(--red); }
+.help-sec ul { margin: 0; padding-left: 1.2em; font-size: 12.5px; line-height: 1.8; color: var(--ink); }
+.help-sec b { color: var(--navy); }
+.help-sec a { color: var(--red); font-weight: 700; }
 .updates-list { overflow-y: auto; -webkit-overflow-scrolling: touch; margin-bottom: 14px; }
 .update-item { background: #fff; border: 1px solid var(--line); border-radius: 12px; padding: 10px 14px; margin-bottom: 10px; }
 .ver-row { display: flex; align-items: center; gap: 12px; }
@@ -400,6 +406,14 @@ svg.icon-svg { display: block; }
   // ・ver：大きな機能追加は 2つ目の数字（1.2 → 1.3）、文言や小さな修正は 3つ目の数字（1.2 → 1.2.1）を上げる
   // ・notify: false にすると、「NEW」の帯は出さずに更新履歴にだけ載せます（小さな修正向け）
   var UPDATES = [
+    { id: 9, ver: "1.3", date: "2026.09.16", title: "「使い方」を追加しました", items: [
+      "画面上部の「使い方」ボタンから、登録方法や各ボタンの説明を確認できるようにしました。",
+      "ページ下部の「使い方を見る」からも開けます。"
+    ] },
+    { id: 8, ver: "1.2.4", notify: false, date: "2026.09.12", title: "候補に追加される前の登録も数えるようにしました", items: [
+      "候補になかったポケモンを自分で名前を入力して登録していた場合も、あとからそのポケモンが候補に追加されると、「はっけんした種類数」に自動で数えられるようにしました。",
+      "ひらがなで入力していた場合や、すがた名を省略していた場合も、同じポケモンとして数えます。ただし、すがた違いの候補が2種類以上ある場合を除きます。"
+    ] },
     { id: 7, ver: "1.2.3", notify: false, date: "2026.09.12", title: "ポケモン図鑑の候補を追加しました", items: [
       "「ポケモン図鑑」タブの候補を3種追加しました（全204種）。"
     ] },
@@ -431,6 +445,54 @@ svg.icon-svg { display: block; }
 
   // 名前の候補（「候補を編集」からも変更できます）
   var DEFAULT_CANDIDATES = ["レジギガス", "レジアイス", "レジロック", "レジスチル", "アンノーン", "ウツロイド", "コスモッグ", "コスモウム", "カミツルギ", "ネクロズマ", "マッシブーン", "ギルガルド（シールドフォルム）", "メルタン", "メタグロス", "デカヌチャン", "パルシェン", "フリーザー", "フリーザー（ガラルのすがた）", "サンダー", "サンダー（ガラルのすがた）", "ファイヤー", "ファイヤー（ガラルのすがた）", "ミュウツー", "ギアル", "ギギアル", "ギギギアル", "オニドリル", "フシギダネ", "ゼニガメ", "ヒトカゲ", "ポッポ", "コラッタ", "ビッパ", "ヤドン", "シェルダー", "ヤドラン", "ニャース", "ニャース（ガラルのすがた）", "ペルシアン", "ニャイキング", "カラナクシ（にしのうみ）", "カラナクシ（ひがしのうみ）", "トリトドン（にしのうみ）", "トリトドン（ひがしのうみ）", "ビリリダマ", "ビリリダマ（ヒスイのすがた）", "マルマイン", "マルマイン（ヒスイのすがた）", "ミュウ", "ガバイト", "メレシー", "ヤミラミ", "チルット", "チルタリス", "ジャラランガ", "ブリジュラス", "タツベイ", "ボーマンダ", "バンギラス", "ドラメシヤ", "ドロンチ", "ドラパルト", "フカマル", "ガブリアス", "キングドラ", "カイリュー", "ヌメルゴン", "セグレイブ", "サザンドラ", "フーパ（いましめられしフーパ）", "ラティアス", "ラティオス", "ジガルデ（10%フォルム）", "ディグダ", "ダグトリオ", "ウミディグダ", "ウミトリオ", "メノクラゲ", "ドククラゲ", "ノノクラゲ", "リククラゲ", "カビゴン", "カジッチュ", "タルップル", "アマカジ", "ヤバチャ（しんさくフォルム）", "ヤバチャ（がんさくフォルム）", "ポットデス（がんさくフォルム）", "マホイップ", "バニプッチ", "バニリッチ", "バイバニラ", "チャデス（マガイモノのすがた）", "パピモッチ", "バウッツェル", "ホシガリス", "ヨクバリス", "ゴンベ", "ファイアロー", "キャモメ", "ツツケラ", "ピジョン", "タマタマ", "ナゾノクサ", "タマゲタケ", "モロバレル", "スボミー", "カクレオン", "ウソッキー", "デスマス", "デスマス（ガラルのすがた）", "デスカーン", "デスバーン", "イシヘンジン", "ゴルーグ", "オドリドリ（めらめらスタイル）", "オドリドリ（ぱちぱちスタイル）", "オドリドリ（まいまいスタイル）", "オドリドリ（ふらふらスタイル）", "イーユイ", "パオジアン", "チオンジェン", "ディンルー", "コライドン", "ミライドン", "キチキギス", "マシマシラ", "モモワロウ", "イイネイヌ", "オーガポン", "シャリタツ（そったすがた）", "シャリタツ（たれたすがた）", "シャリタツ（のびたすがた）", "ヘイラッシャ", "トルネロス（けしんフォルム）", "ボルトロス（けしんフォルム）", "ランドロス（けしんフォルム）", "ラブトロス（けしんフォルム）", "パチリス", "デンチュラ", "ロトム（ロトムのすがた）", "ミミッキュ（ばけたすがた）", "ピチュー", "ライチュウ", "コイル", "カプ・コケコ", "メリープ", "ゼラオラ", "ラクライ", "ライボルト", "ルクシオ", "レントラー", "モルペコ（まんぷくもよう）", "モルペコ（はらぺこもよう）", "デデンネ", "シママ", "ゼブライカ", "レアコイル", "エリキテル", "プラスル", "マイナン", "トゲデマル", "エレキッド", "サンダース", "エモンガ", "パモ", "パモット", "パーモット", "ズピカ", "ハラバリー", "ワンパチ", "バチュル", "エンテイ", "ライコウ", "スイクン", "テッポウオ", "マンタイン", "ヨワシ（たんどくのすがた）", "ナミイルカ", "コダック", "ジュゴン", "ペリッパー", "ラプラス", "カイデン", "セレビィ", "パラセクト", "マシェード", "カイロス", "デンヂムシ", "クワガノン", "ヘラクロス", "アブリー", "ヒメンカ", "カリキリ", "ヤバソチャ（けっさくのすがた）", "カミッチュ", "デオキシス", "レックウザ", "メテノ", "ルナトーン", "ピカチュウ", "バチンウニ", "ハリーセン（ヒスイのすがた）", "ハリーマン"];
+
+  // 使い方の説明（<b>などのタグはそのまま表示されます）
+  var HELP = [
+    { title: "このサイトについて", items: [
+      "イベントで見つけたポケモンを、写真といっしょに記録できる非公式ツールです。",
+      "空欄を埋めていくと、はっけんした種類の数字が増えていきます。",
+      "登録した内容は、この端末のブラウザ内だけに保存されます。ほかの人には見えません。"
+    ] },
+    { title: "① 登録する", items: [
+      "空欄のカードをタップすると、登録画面が開きます。",
+      "<b>写真をえらぶ</b>：「タップして写真をえらぶ」から、登録したい写真を選びます。",
+      "<b>名前をえらぶ</b>：検索欄にポケモンの名前を入力すると、候補が表示されます。ひらがなでも検索できます。",
+      "1枚の写真に複数のポケモンが写っているときは、まとめて登録できます。候補をタップすると追加され、もう一度タップすると外せます。",
+      "最後に「登録する」を押すと、カードに写真とスタンプが付きます。"
+    ] },
+    { title: "② 写真を編集する", items: [
+      "登録画面の「写真を編集」から、トリミング・回転・明るさや色味の調整・フィルターができます。",
+      "写真はドラッグで移動し、2本指で拡大・縮小できます。",
+      "「全体を入れる」を押すと、写真全体が正方形に収まります。余った部分は白・黒・ぼかしから選んで埋められます。",
+      "登録したあとも、何度でも編集できます。"
+    ] },
+    { title: "③ 2つのタブ", items: [
+      "<b>ポケモン図鑑</b>：街なかの名前札にいるポケモンを登録するタブです。",
+      "<b>立像ポケモン</b>：立像や大きな解説パネルにいるポケモンを登録するタブです。",
+      "空欄・候補・写真・進み具合は、タブごとに別々に保存されます。",
+      "空欄が足りなくなったら、一覧のいちばん下にある「空欄を追加」から増やせます。"
+    ] },
+    { title: "数字の見方", items: [
+      "大きい数字は「はっけんした種類 ／ 候補の種類」です。同じポケモンを何枚登録しても、1種類として数えます。",
+      "その下には、登録した写真の枚数と空欄の数が表示されます。"
+    ] },
+    { title: "そのほかの機能", items: [
+      "<b>並び替え</b>：番号順・五十音順・空欄を先に、の3通りで並べ替えられます。",
+      "<b>候補を編集</b>：候補の名前を追加したり、削除したりできます。候補にない名前も、検索欄に入力してそのまま登録できます。",
+      "<b>ネタバレ防止</b>：候補の一覧は、はじめは隠れています。「候補を全部表示する」で表示し、「候補の一覧を隠す」で再び隠せます。",
+      "<b>画像で保存</b>：登録した写真を1枚の画像にまとめて保存できます。スマホでは「保存する」を押すか、表示された画像を長押しして保存してください。"
+    ] },
+    { title: "やり直したいとき", items: [
+      "<b>カードをタップ</b>：写真や名前を変更できます。「空欄にもどす」を押すと、その枠だけ空の状態に戻せます。",
+      "<b>リセット</b>：開いているタブの写真と名前をすべて消します。",
+      "<b>初期化</b>：開いているタブを、空欄の数や候補も含めて最初の状態に戻します。",
+      "リセット・初期化ともに、もう一方のタブには影響しません。元には戻せないため、ご注意ください。"
+    ] },
+    { title: "気をつけること", items: [
+      "ブラウザのデータを削除した場合や、別のブラウザ・端末で開いた場合、登録内容は引き継がれません。",
+      "うまく動かないときやお気づきの点があれば、X（旧Twitter）の <a href=\'https://x.com/michiru_poke\' target=\'_blank\' rel=\'noopener\'>@michiru_poke</a> までお知らせください。"
+    ] }
+  ];
 
   // ---------- IndexedDB ----------
   var DB_NAME = "hakken-zukan-db";
@@ -627,6 +689,7 @@ svg.icon-svg { display: block; }
   var ICON_SEARCH = svgIcon('<circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>', 16);
   var ICON_EDIT = svgIcon('<path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"/>', 16);
   var ICON_ROTATE = svgIcon('<path d="M21 12a9 9 0 1 1-3-6.7L21 8"/><polyline points="21 3 21 8 16 8"/>', 16);
+  var ICON_HELP = svgIcon('<circle cx="12" cy="12" r="10"/><path d="M9.1 9a3 3 0 1 1 4.2 2.7c-.8.4-1.3 1.1-1.3 2"/><line x1="12" y1="17" x2="12" y2="17.01"/>', 15);
   var ICON_SPARKLES = svgIcon('<path d="M12 3l1.9 5.1L19 10l-5.1 1.9L12 17l-1.9-5.1L5 10l5.1-1.9Z"/>', 30);
 
   function stampSvg() {
@@ -694,11 +757,25 @@ svg.icon-svg { display: block; }
     var need = state.candidates.length - state.slots.length;
     if (need > 0) { state.slots = state.slots.concat(freshSlots(need)); persistSlots(); }
   }
+  // 名前くらべ用に整える（ひらがな→カタカナ、すがた名や記号を外す）
+  function baseName(n) {
+    return toKata(String(n).replace(/[（(][^）)]*[）)]/g, "")).replace(/[\s・,、.。]/g, "");
+  }
   // 候補にあるポケモンのうち、写真と名前がそろって登録済みの種類数
   function foundSpecies(list, cands) {
-    var done = {};
+    cands = cands || state.candidates;
+    var done = {}, inCands = {};
+    cands.forEach(function (c) { inCands[c] = true; });
     list.forEach(function (s) { if (s.photo) s.names.forEach(function (n) { done[n] = true; }); });
-    return (cands || state.candidates).filter(function (c) { return done[c]; }).length;
+    // 候補に入る前に自分で名前を入力して登録していた場合も、同じポケモンとして数える
+    Object.keys(done).forEach(function (n) {
+      if (inCands[n]) return;
+      var b = baseName(n);
+      if (!b) return;
+      var hit = cands.filter(function (c) { return baseName(c) === b; });
+      if (hit.length === 1) done[hit[0]] = true; // 同じ名前の候補が2つ以上ある（すがた違い）ときは数えない
+    });
+    return cands.filter(function (c) { return done[c]; }).length;
   }
   function freshSlots(n) {
     var out = [];
@@ -1194,6 +1271,7 @@ svg.icon-svg { display: block; }
     h += '  <p class="eyebrow"><span class="lamp"></span> DISCOVERY LOG</p>';
     h += '  <div class="header-actions">';
     h += '    <button class="btn-pill print-btn" id="btn-download" ' + (state.exporting ? "disabled" : "") + '><span class="icon">' + ICON_DOWNLOAD + '</span>' + (state.exporting ? "書き出し中…" : "画像で保存") + '</button>';
+    h += '    <button class="btn-pill ghost-btn" id="btn-help"><span class="icon">' + ICON_HELP + '</span>使い方</button>';
     h += '    <button class="btn-pill ghost-btn" id="btn-init"><span class="icon">' + ICON_REFRESH + '</span>初期化</button>';
     h += '    <button class="btn-pill ghost-btn" id="btn-reset"><span class="icon">' + ICON_RESET + '</span>リセット</button>';
     h += '  </div>';
@@ -1274,6 +1352,7 @@ svg.icon-svg { display: block; }
     h += '<p>また、このサイトはポケモンを見つけた記録を楽しむためのものです。謎解きの問題・答え・手がかりなどの公開や転載を目的としたものではありません。</p>';
     h += '<p>SNSなどへ投稿するときも、公式の案内やルールを守ってお楽しみください。</p>';
     h += '<p>バグや不具合、このサイトについてのご連絡は、イベント公式ではなく、X（旧Twitter）の <a href="https://x.com/michiru_poke" target="_blank" rel="noopener">@michiru_poke</a> までお願いします。</p>';
+    h += '<p><button class="text-btn" id="btn-help2">使い方を見る</button></p>';
     h += '<p class="ver-row"><span class="ver-now">ver.' + escapeHtml(UPDATES[0].ver) + '</span><button class="text-btn" id="btn-updates">更新履歴を見る</button></p>';
     h += '<p class="enjoy">素敵なイベントを作ってくださった皆さまへの敬意を大切にしつつ、<br>イベントのおともに、気軽に楽しんでもらえたらうれしいです！</p>';
     h += '</footer>';
@@ -1281,10 +1360,12 @@ svg.icon-svg { display: block; }
     app.innerHTML = h;
 
     document.getElementById("btn-download").onclick = handleDownload;
+    document.getElementById("btn-help").onclick = function () { state.modal = { type: "help" }; renderModal(); };
     function openUpdates() { markUpdatesSeen(); state.modal = { type: "updates" }; render(); renderModal(); }
     var um = document.getElementById("btn-upd-more"); if (um) um.onclick = openUpdates;
     var uc = document.getElementById("btn-upd-close"); if (uc) uc.onclick = function () { markUpdatesSeen(); render(); };
     var uh = document.getElementById("btn-updates"); if (uh) uh.onclick = openUpdates;
+    var h2 = document.getElementById("btn-help2"); if (h2) h2.onclick = function () { state.modal = { type: "help" }; renderModal(); };
     var nb = document.getElementById("btn-notice");
     if (nb) nb.onclick = function () {
       noticeClosed = true;
@@ -1332,6 +1413,15 @@ svg.icon-svg { display: block; }
         ? '下の「保存する」を押し、表示されたメニューから<b>「画像を保存」</b>を選んでください。<br>うまく保存できない場合は、上の画像を<b>長押し</b>して保存することもできます。'
         : '下の「ダウンロード」を押すと保存できます。<br>うまく保存できない場合は、上の画像を<b>長押し</b>して保存することもできます。') + '</p>';
       h += '<div class="modal-actions"><button class="btn-cancel" id="m-cancel2">とじる</button><button class="btn-primary" id="m-ok">' + (share ? "保存する" : "ダウンロード") + '</button></div></div>';
+    } else if (m.type === "help") {
+      h += '<div class="modal"><div class="modal-head"><p class="modal-title">つかいかた</p><button class="modal-close" id="m-cancel">' + ICON_X + '</button></div>';
+      h += '<div class="help-body">';
+      HELP.forEach(function (sec) {
+        h += '<section class="help-sec"><h3>' + escapeHtml(sec.title) + '</h3><ul>';
+        sec.items.forEach(function (it) { h += '<li>' + it + '</li>'; });
+        h += '</ul></section>';
+      });
+      h += '</div><div class="modal-actions"><button class="btn-primary" id="m-cancel2">とじる</button></div></div>';
     } else if (m.type === "updates") {
       h += '<div class="modal"><div class="modal-head"><p class="modal-title">更新のお知らせ</p><button class="modal-close" id="m-cancel">' + ICON_X + '</button></div>';
       h += '<div class="updates-list">';
